@@ -1,0 +1,138 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{typetheory}
+
+\RequirePackage{amsmath,MnSymbol,mathtools}
+\RequirePackage{mathrsfs} % provides \mathscr, which is an alternative caligraphic font
+\RequirePackage{bussproofs,fitch}
+\RequirePackage{bbold} % TODO or should I use dsfont and \mathds?
+% FIXME: why is \emptyset rendering identical to \varnothing?
+
+\RequirePackage{varwidth}
+
+%%%%%% Helpers %%%%%%
+
+\newcommand\strong[1]{{\bf#1}} % to highlight definitions
+% TODO: make sure it chooses an appropriate font style depending on context
+\newcommand\supth{\textsuperscript{th}}
+
+% handy arrow synonyms
+\newcommand*\To{\Rightarrow}
+\newcommand*\from{\leftarrow}
+\newcommand*\longto{\longrightarrow}
+\newcommand*\reduceto{\mathrel{\;\,\scalebox{1.5}[1]{$\to$}\;\,}}
+
+% use bussproofs' prooftree environment in math mode (e.g. for inside equation environments)
+% taken from https://tex.stackexchange.com/a/58041
+% needs varwidth package
+\newenvironment{mathprooftree}
+  {\varwidth{.9\textwidth}\centering\leavevmode}
+  {\DisplayProof\endvarwidth}
+
+%%%%%% Common Functions and Relations %%%%%%
+
+\newcommand*\dom{\mathrm{dom}}
+\newcommand*\fv{\mathrm{fv}} % free variables
+
+\newcommand*\ordcolon{\mathord:} % eliminate space around a colon
+\newcommand*\scrcolon{\mathbin{\,\ordcolon\,}} % colon can get crunched in subscripts
+
+%%%%%% Common Notations %%%%%%
+
+% TODO: I've priveledged my "Chef's Choice" notations; I'd better allow for options, though
+
+\newcommand\namedhole[1]{%
+  \relax%
+  \ifmmode%
+    {%
+      \mathchoice%
+        {\fbox{$\displaystyle%$
+          \mathstrut%
+          \textsc{\small #1}%
+        $}}%
+        {\fbox{$\textstyle%
+          % \mathstrut%
+          \textsc{\small #1}% TODO tune size of font
+        $}}%
+        {\fbox{$\scriptstyle%$
+          % \mathstrut%
+          \textsc{#1}% TODO tune size of font
+        $}}%
+        {\fbox{$\scriptscriptstyle%$
+          % \mathstrut%
+          \textsc{#1}% TODO tune size of font
+        $}}%
+    }%
+  \else%
+    {%
+      \setlength{\fboxsep}{0.2ex}%
+      \fbox{%
+        $\mathstrut$%
+        \textsc{#1}%
+      }%
+    }%
+  \fi%
+}
+
+\newcommand*\ind{\mathsf{ind}}
+\newcommand*\rec{\mathsf{rec}}
+
+\newcommand\lambdaesque[2]{{#1}{#2}.\,}
+
+\newcommand\fun[1]{\lambdaesque{\lambda}{#1}}
+\newcommand\Fun[1]{\lambdaesque{\Lambda}{#1}}
+% for type annotations on binders, use either `^` or `\varcolon`
+% use `\;` for application fo explicit arguments
+\newcommand\all[1]{\lambdaesque{\forall}{#1}}
+\newcommand\All{\mathop{\mathchoice%
+  {\scalebox{1.78}{\raisebox{-0.45ex}{$\forall$}}}%
+  {\scalebox{1.25}{\raisebox{-0.275ex}{$\forall$}}\!}%
+  {\scalebox{1}{\raisebox{-0.3ex}{$\forall$}}\!}%
+  {\scalebox{0.75}{\raisebox{-0.35ex}{$\forall$}}\!}%
+}}
+
+\newcommand*\U{\mathcal{U}}
+
+% \fontsize{4pt}{4pt}\selectfont
+% \newcommand\defeq{\overset{\text{\fontsize{4pt}{4pt}\selectfont def}}{=}}
+% \newcommand\defeq{\mathrel{\overset{\text{def}}{\scalebox{1.5}[1]=}}}
+\newcommand*\trieq{\mathrel{\overset{\scalebox{0.6}{$\triangle$}}=}}
+\newcommand*\defeq{\mathrel{\overset{\mathclap{\scalebox{0.6}{\text{def}}}}{\scalebox{1.1}[1]=}}}
+
+\newcommand\dto[1]{\mathbin{\prescript{}{#1}{\mathord{\to}}}}
+  % \newcommand\deparr[3]{#2 \dto{#1} #3}
+\newcommand\Pitype{\@ifstar{\Pitype@star}{\Pitype@nostar}}
+  \newcommand\Pitype@nostar[2]{\prod_{#1 \scrcolon #2}}
+  \newcommand\Pitype@star[2]{\prod_{\mathclap{#1 \scrcolon #2}}}
+\newcommand\Pitypes{\@ifstar{\Pitypes@star}{\Pitypes@nostar}}
+  \newcommand\Pitypes@nostar[1]{\prod_{\substack{#1}}}
+  \newcommand\Pitypes@star[1]{\prod_{\mathclap{\substack{#1}}}}
+\newcommand\deparr[2]{({#1}:{#2}) \to}
+\newcommand\vardeparr[3][]{\prescript{{#2}\ordcolon\!{#1}}{}{{#3}} \to}
+
+\newcommand\vardeptimes[4][]{\prescript{{#2}\ordcolon\!{#1}}{}{{#3}} \times {#4}}
+
+
+\newcommand\W{\mathsf{W}}
+\DeclareMathOperator{\bigW}{\W}
+\newcommand\wsup{\mathsf{sup}}
+\newcommand\WI{\mathsf{WI}}
+
+\newcommand\refl{\mathsf{refl}}
+
+\newcommand\letPart{\mathinner{\textsf{let}}}
+\newcommand\letrecPart{\mathinner{\textsf{let rec}}}
+\newcommand\inPart{\mathinner{\textsf{in}}}
+\newcommand\letin[1]{\letPart{#1}\inPart}
+\newcommand\where{\mathinner{\textsf{where}}}
+
+\newcommand\casePart{\mathinner{\textsf{case}}}
+\newcommand\ofPart{\mathinner{\textsf{of}}}
+\newcommand\caseof[1]{\casePart{#1}\ofPart}
+
+
+%%%%%% Names for Things %%%%%%
+
+\newcommand\SystemF{System $\mathrm F$}
+\newcommand\SystemFw{System $\mathrm F_\omega$}
+\newcommand\SystemU{System $\mathrm U$}
+\newcommand\SystemUminus{System $\mathrm U^-$}
