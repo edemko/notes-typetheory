@@ -11,6 +11,7 @@
 %%% PACKAGES
 \usepackage{typetheory}
 
+\usepackage{multirow}
 \usepackage{stackengine}
 \usepackage{hyperref}
   \hypersetup{
@@ -63,11 +64,12 @@ As a side-effect, I'll also have a compilation of type-theoretic concepts as a r
 \section*{Most Important Next Steps}
 
 \begin{enumerate}
-  \item Nominal types; it might have something to so with \cite{diy_1989}\S3.4.
-  \item Higher Inductive Types
-  \item Indexed W-types
+  \item Nominal types; it might have something to so with \cite{diy_1989}\S3.4. Alternately, it might have something to do with ``propositional truncation'' \url{https://www.youtube.com/watch?v=bNG53SA4n48}.
   \item Presenting a Formal System or Programming Language
     (I hear that elimination, computation, and identity rules are derivable from formation and introduction \cite{diy_1989})
+    (Ulf Norell's thesis uses a $\Gamma \vdash \mathbf{valid}$ judgment, and then just a variable lookup rule $\Gamma \vdash \mathbf{valid} \quad x:A \in \Gamma \over \Gamma \vdash x : A$)
+  \item Higher Inductive Types
+  \item Indexed W-types
 \end{enumerate}
 
 I've chosen to give rules for typing $\ind\;f$ where $f$ is the ``body'' of the induction because that's the form of the actual recursive function we're interested in.
@@ -133,7 +135,7 @@ When I see $i$ as a metavariable, I expect it to range over some naturals or int
   $$f\;\overline{(g_i\;a_i)}$$
 Once metavariable comprehensions become nested (it's rare, but possible), including the meta-meta-variable binders is useful:
   $$\letin{\overline{x_i = f_i\;\overline{a_{ij}}^{j \in \mathbb N_i}}^i}e'$$
-takes a triangle of arguments, applies each row to a (possibly different) function, and binds each result to a different variable.
+takes a triangle of arguments $a_{ij}$, applies each row to a (possibly different) function $f_i$, and binds each result to a different variable $x_i$.
 It's contrived to be sure, but just in case I get carried away with something less contrived, it's nice to have a notation that uses fewer ellipses than
   $$\letin{x_1 = f_1; x_2 = f_2\;a_{2,1}; \ldots; x_n = f_n\;a_1\;a_2\;\ldots\;a_{n,n-1}}e'$$
 
@@ -150,7 +152,7 @@ There's probably also some way to insert a zero-width box with a given height fo
 \subsection{Specifying Constraints on Free Variables in the Metavariables}
 
 This seems to be more common in mathematical logic than in type theory.
-In general, type theorists are willing to write $\fun{x}e\;x \longto e$ with a side-condition $x \nin \fv(e)$.
+In general, type theorists are willing to write $\fun{x}e\;x \longto e$ with a side-condition $x \notin \fv(e)$.
 This can get tedious sometimes: we might want to use a metavariable that stands for terms that don't have free variables other than those in the implied context around the whole expression and those explicitly mentioned.
 For this, I've really only seen one notation:
 \begin{center}
@@ -191,7 +193,7 @@ When an author wants to be very explicit, they might even write
 to make it clear that the only variables introduced are the ones which are bound (so $x.e(x)$ is parsed like $x.(e(x))$).
 
 You might notice in the last example that $e'_l(\mathbf{inl}(a))$ omits the variable binding, which is normal, but possibly unintuitive.
-It seems that the ``$x.$'' part is not part of the metavariable name, but just a prefix restricting the rage of the metavariable; whenever the same name is used elsewhere, the same restriction applies, so it is not usually repeated.
+It seems that the ``$x.$'' part is not part of the metavariable name, but just a prefix restricting the range of the metavariable; whenever the same name is used elsewhere, the same restriction applies, so it is not usually repeated.
 
 Another oddity from the last example is that the $x.$ prefix is used in multiple places, but authors do not usually mean that each $x$ need be filled with the same variable.
 It seems the variable binding sometimes extends to the meta-theory as well as the theory: when the same metavar occurs in multiple variable binding prefixes, they need not match.
@@ -215,9 +217,11 @@ $[\overline{\mathstrut t/x}]$ & HoTT; wiki also mentions this in a note \\
 $[\overline{\mathstrut t/x}]$ & HoTT; wiki also mentions this in a note \\
 $[\overline{\mathstrut t_i} / \overline{\mathstrut x_i}]$ &  \\
 $[\overline{\mathstrut x_i}\mapsto\overline{\mathstrut t_i}]$ &  \\
+$[\overline{\mathstrut x_i}\mathbin{:=}\overline{\mathstrut t_i}]$ & TODO Ulf Norell's thesis \\
 \end{tabular}
 \end{center}
 The substitution might be seen as a total map on the set of variables, or a finite map from variables (i.e. partial), but the two are isomorphic.
+TODO: whenever one of these forms is used, usually the author explicitly admits substitution of a single variable, and usually takes parallel substitution as derived from single-variable substitution.
 
 Often substitutions will be introduced as mapping only a single variable, then \strong{parallel substitutions} are defined based on them.
 Presumably, this means that \strong{series substitutions} are a thing, though I've yet to see terminology for the fact that $[x \mapsto a][y \mapsto b]t = [x, y \mapsto a, [x \mapsto a]b]t$, but the fact rarely comes up.
@@ -250,7 +254,9 @@ TODO is there such a thing as inverse substitution, or replacing \emph{terms} by
 
 \section{Sameness}
 
-TODO: judgmental equality, propositional equality, definitional equality, congruence $\cong$ or equivalence $\equiv$ under a relation, abbreviations, identity type, isomorphism
+TODO: judgmental equality, propositional equality, definitional equality, congruence $\cong$/$\simeq$ or equivalence $\equiv$ under a relation, abbreviations, identity type, isomorphism
+
+``Inductive type in homotopy type theory'' by Awodey etal uses ``definitional equality'' to describe equality judgments. Porbably HoTT book does too.
 
 \subsection{TODO: Abbreviations}
 
@@ -276,6 +282,9 @@ TODO I'm just remembering these; I need references
 
 \section{Universes}
 
+FIXME type theories can forgo universes by adding judgements of the forms $A : \mathsf{Type}$ and $A = B : \mathsf{Type}$.
+perhaps I can move this section lower down
+
 The \strong{terms} of a type theory correspond to terms of the untyped lambda calculus, and are classified by types.
 However, the types of a dependent type theory must also be classified, and \strong{universes} are a very common way to do this.
 Universes represent a special---but very useful---case of what Pure Type Systems call \strong{sorts}.
@@ -288,6 +297,9 @@ $U$ & \cite{martin-lof_1984} \\
 \end{tabular}
 \end{center}
 I don't remember seeing it, but I wouldn't be surprised if someone decided to start from $\U_1$ rather than $\U_0$.
+
+TODO: we call rules like $\frac{x:A \vdash B : \U}{\Pitype{x}{A}B : \U}$ a formation rule for $\Pi$-types, but couldn't we also see it as an introduction form for universes?
+Doing so would perhaps make the common refrain ``universes are closed under the type formers $\Pi$, $\Sigma$, $\W$, etc'' more familiar.
 
 TODO: is this really all that universes are about?
 Martin-L\"of\cite{martin-lof_1984} describes universes as allowing the definition of more than just finite types; these new types that are added are called transfinite types
@@ -350,12 +362,163 @@ $\square$ & lambda cube oriented notation \\
 TODO:
 I've also seen $\mathrm{Set}, \mathrm{Prop}$ mentioned, almost as if they were just $\U_0, \U_1$.
 How do they actually work (I think they're drawn from CIC, but they certainly show up in Coq).
+In HoTT, $Prop \defeq \deptimes{A}{\U} (\vardeparr{x,y}{A}x =_A y)$, which gives some computational explanation why Coq can erase proofs of propositions: it's the same reason why elements of unit type are laid out with zero memory.
+Or does it? Coq Prop may not be the same as HoTT Prop.
 
 
-\section{Functions}
-\label{sec:function-types}
+\section{Fundamental Algebraic Types}
 
-Function types at least have a standard notation in mathematics, even if some authors want to mix it up:
+I'm struggling to find a name for this section, but what I'm really after is a description of $\prod$-types and $\sum$-types and their variants.
+The most important concepts in this section are closely linked by dualities of various sorts; since I'm of the opinion that whenever a language implements one concept it should also implement the dual concept, once you let one of these type in, the rest of the camel comes along, so to speak.
+
+Thankfully, there is a very nice categorical perspective which ties all of these types together, and which relates back to both elementary algebra (the kind you learned in primary school) and the currying well-known in functional programming.
+From programming, we see an isomorphism evidenced by currying and uncurrying functions.
+  $$(A, B) \to C \simeq A \to (B \to C)$$
+In category theory, we understand tuples as multiplications and functions as exponentials (note: with base as the target type and exponent as the source type); if we write them as such, then the above equivalence becomes a familiar law of exponents from elementary algebra.
+  $$C^{AB} = (C^B)^A$$
+Indeed, many such laws carry over: since $AB = BA$ in elementary algebra, we expect the type isomorphism $(A, B) \simeq (B, A)$, which is evidenced by the swap function $\fun{(x, y)}(y,x)$ (and we already used this identity to write $C^{AB}$ instead of $C^{BA}$ before).
+
+In particular, a \strong{Cartesian closed category} (\strong{CCC}) is one which has a terminal object (corresponding to the unit type \S\ref{subsec:unit-type}), binary products (corresponding to pair types \S\ref{subsec:pair-types}), and exponentials (corresponding to function types \S\ref{subsec:function-types}).
+A \strong{bicartesian closed category} (\strong{BCCC}) is a CCC which also contains the dual concepts: an initial object (empty type \S\ref{subsec:void-type}) and binary coproducts (binary choice type \S\ref{subsec:choice-types}).
+If a CCC is also \strong{locally Cartesian closed}, then the analogues of dependent function and dependent pair types are also present.
+TODO: I've gotten this info off of wiki.
+Also, \href{https://golem.ph.utexas.edu/category/2006/08/cartesian_closed_categories_an_1.html}{n-Category Caf\'e} seems to have some good links to the major papers and tutorials in the literature.
+
+The thing is, if binary (and nullary) sums and products are categorical duals, then what is the dual of an exponential?
+I don't know of a categorical dual, but we can also draw on an interpretation of types as logic.
+The dependent function and pair types correspond to the notions of universal and existential quantification, and these two are \href{https://ncatlab.org/nlab/show/De+Morgan+duality}{De Morgan dual} (TODO: cite properly).
+Interestingly, a logical formula which is a finite disjunction of conjunctions is called a ``sum of products'', which corresponds nicely to category theory terminology.
+So, once you add functions to a dependently-typed language, logical duality suggests you add dependent pairs, which have binary products as a special case, at which point category theory suggests you add binary sums.
+Schematically:
+
+$$
+  A \to B
+  \xrightarrow{\substack{\text{dependent} \\ \text{types}}} \prod_{x:A}B(x)
+  \xrightarrow{\substack{\text{logical} \\ \text{dual}}} \sum_{x:A}B(x)
+  \xrightarrow{\substack{\text{special} \\ \text{case}}} A \times B
+  \xrightarrow{\substack{\text{categorical} \\ \text{dual}}} A + B
+$$
+
+Annoyingly, the terms ``sum'' and ``product'' are used differently in different contexts, as summarized in the table below.
+More annoyingly, there isn't a way to choose a single set of terms that is both immune to confusion and also illuminating as to the conceptual relationships.
+Note for example how a non-dependent product type becomes a dependent sum type, but the categorical dual of the non-dependent product is also called a sum type; meanwhile the dependent function is also called a dependent product.
+Since this section will be discussing these types frequently, in relation to each other, and across disciplines, we will need some non-confusing terminology; the terms I have chosen are listed done under ``Chef's Choice''
+\begin{center}
+\begin{tabular}{lccc}
+Haskell type: & \texttt{Either A B} & \texttt{(A, B)} & \texttt{A -> B} \\
+\hline
+non-dependent type  & $A + B$        & $A \times B$      & $A \to B$            \\
+dependent type      & ---            & $\sum_{x:A}B(x)$  & $\prod_{x:A}B(x)$    \\
+category            & $A+B$          & $AB$              & $B^A$                \\
+boolean logic       & $A \lor B$     & $A \land B$       & $A \implies B$       \\
+quantifier logic    & ---            & $\exists x.B(x)$  & $\forall x.B(x)$     \\
+set theory          & disjoint union & cartesian product & total function       \\
+                    & ---            & indexed sum?      & indexed family       \\
+English             & sum, coproduct & product, pair     & function, map, arrow \\
+                    & ---            & sum, pair         & product, function    \\
+\emph{Chef's Choice} & \emph{choice types} & \emph{pair types} & \emph{function types} \\
+                     & --- & \emph{dependent pair types} & \emph{dependent function types} \\
+\end{tabular}
+\end{center}
+The use of ``pair''/``function'' in conjunction with ``dependent'' when needed is obvious.
+I have not found the term ``choice types'' used in the literature, but I find it evocative and---more importantly---not confusable with dependent pair types.
+Perhaps the reader could argue that ``choice type'' doesn't satisfactorily relay its categorical duality with pair types, and that is true; I will note that the choice types is not strictly dual to the dependent pair types, but to non-dependen pair types, which one might think of as ``both types,'' though we won't refer to them that way here.
+
+Another way to overcome the terminological confusion is to simply refer to each type by its mathematical notation: $\Pi$-type and $\Sigma$-type are well-used in the literature to describe dependent function and [air types respectively.
+However, at least in principle the names like $\Pi$-type are overly concrete; they express a particular axiomatization of an idea, not unlike Church numerals being too concrete a formulation of the general concept of natural number.
+This concreteness historically hasn't been a problem for the types we discuss in this section, but when we get to inductive types, we will see that ``W-type'' is only one of a number of approaches to formalizing the notion of inductive type.
+You might still see me use $\Pi$-type and its kin because it's quicker to type, but that is an unintentional artifact that made it past proofreading.
+
+\begin{aside}
+Some readers may not be familiar with the fundamental ideas behind dependent function and pair types.
+To introduce dependent types, I always pick this example, which uses only high-school math.
+\begin{enumerate}[label=\textit{\roman*})]
+\item
+  Consider the functions which take a real number as input and produce a real number as output.
+  These are the ordinary functions like $f(x) = x - 3$, $f(x) = x^2$, or $f(x) = \varexp{x}$ that we work with in elementary algebra.
+  If $f$ is such a function, we might use the notation $$f : \mathbb R \to \mathbb R$$ to express this idea more quickly.
+  This notation used in both standard mathematics as well as type theory.
+\item
+  But consider the functions which, as before, take a real input and produce a real output, but now we additionally constrain the output so that it is always less than or equal to whatever the input was.
+  Intuitively, the functions are those that, when plotted, never go above the line $y = x$.
+  TODO: draw a plot using pgfplot.
+  We can see that most of the examples we gave before do not fall into \emph{this} class of function.
+  One of them ($f(x) = x - 3$) follows the rules, as do functions like $f(x) = x$, $f(x) = \mathrm{max}(x, 0)$ and so on.
+  However, the other two example functions from (\textit{i}) \emph{do not} follow the rules, and so are not included in this class of function:
+    it's easy to see that $f(x) = \varexp{x}$ is always above the line, and $f(x) = x^2$ goes above the line as soon as $x > 1$.
+
+  Can we describe this class of functions more quickly than with prose?
+  Standard mathematics can identify these functions as a set $\{f \in \mathbb R \to \mathbb R \mid \all{x} f(x) \leq x\}$, but this approach has its downsides.
+  For one, I personally think set theory is something of a verbose foundation for mathematics which encourages more informal (i.e. not amenable to automation) definitions, theorems, and proofs.
+  The more pressing issue is that there's no $f : \ldots$ notation corresponding to that used in (\textit{i}) which would make smooth the transition from simple classes of functions to constrained classes.
+\item
+  In type theory, proofs are first-class objects and can be applied and manipulated formally.
+  If we need to know that the output is always less than the input, the method that first comes to my mind is to attach the required proof to the output.
+  That is, we want something of the form
+    $$f : \mathbb R \to \mathbb R \times (\namedhole{output} \leq \namedhole{input})\text{,}$$
+    but what should we fill in as \namedhole{input} and \namedhole{output}?
+  They obviously need to refer to the input and the output reals, so we somehow need to give names to these things.
+  Dependent functions allow us to give a name to the input, and makes that variable available to form the output type.
+  Let's do that and fill in the \namedhole{input} hole:
+    $$f : (\colorbox{lightgray}{x :} \mathbb R) \to \mathbb R \times (\namedhole{output} \leq x)\text{.}$$
+  The output real---as opposed to the output proof---is just the first part of the pair, but dependent pairs allow us to name this half of the pair and use that variable in the second half.
+  This is exactly what we need to fill in \namedhole{output}:
+    $$f : (x : \mathbb R) \to (\colorbox{lightgray}{y :} \mathbb R) \times (y \leq x)\text{.}$$
+  Putting it all together, we read the above as ``$f$ is a function which takes a real input ($x$) to an ordered pair consisting of the real ``output'' ($y$) along with a proof that the output is less than or equal to the input ($y \leq x$)''.
+  This is very close to the prose as we wrote in (\textit{ii}), so it seems like this is a good translation of the idea.
+\item
+  There is another, perhaps more accurate way of formalizing our desired class of functions from (\textit{ii}).
+  The idea is to provide first the function, then a proof about that function.
+  If you'll allow me the liberty of extending the $a : A$ notation (which names a value from a set) to also be able to name a proof of a proposition, then standard mathematics might write
+    \begin{align*}
+      f &: \mathbb R \to \mathbb R\text{, and} \\
+      lte &: \all{x} f(x) \leq x\text{,}
+    \end{align*}
+    which in type theory would be written as the specification of a single dependent pair:
+    $$\langle f, lte \rangle : (f : \mathbb R \to \mathbb R) \times (\all{x} f(x) \leq x)\text{.}$$
+  Here we have an ordinary function on reals $f$, but packaged with a proof that for any input ($\forall x$), its outputs ($f(x)$) are less than its inputs ($f(x) \leq x$).
+  In fact, although we use the logical notation $\forall$, in type theory universal quantification is encoded with a dependent function.
+  In this case: $\all{x} f(x) \leq x \mathrel{\;\leadsto\;} (x : \namedhole{type}) \to f(x) \leq x$.
+  In this case, we know $x$ must be a real number, since $f(x)$ must be well-typed, so we can fill in \namedhole{type} with $\mathbb R$ to obtain this fully type-theoretic specification:
+    $$\langle f, lte \rangle : (f : \mathbb R \to \mathbb R) \times ((x : \mathbb R) \to f(x) \leq x)\text{.}$$
+  This makes it clear that what we have is a pair of functions, one of which produces the values we care about, and the other provides the proofs we need for each value.
+  It's easy to see by translating this type back to prose, that this is \emph{also} a good translation of the original idea.
+\item
+  Indeed, the types demonstrated in (\textit{iii}) and (\textit{iv}) are \emph{equally good} translations of the idea in (\textit{ii}),
+    and it even turns out that this equivalence can be formalized.
+  If we read functions as exponentials (i.e. $A \to B$ is like $B^A$), then their equivalence is just an instance of familiar algebraic law $(y \times z)^x = y^x \times z^x$, taking $x$ as the input type, $y$ as the output type, and $z$ as the proof type.
+  This metaphor can be expressed formally in category theory.
+\item
+  Note that so far, I've only demonstrated \emph{total} functions.
+  Although standard mathematical practice would allow $f(x) = \ln(x)$ to be part of the class of functions from (\textit{ii}), the type-theory translations would not be accurate because $\ln(x)$ is a \emph{partial} function.
+  In standard mathematical practice arrow often denotes partial functions, but in type theory it is \emph{always} total.
+  In type theory, we would say
+    \begin{align*}
+      f &: \mathbb R \to \mathbb 1 + \mathbb R\text{, and} \\
+      lte &: (x : \mathbb R) \to \caseof{f(x)}\{\iota_1(u) \To \mathbb 1; \iota_2(y) \To y \leq x\}
+    \end{align*}
+    to express that if $f(x) = y$ is defined we need $y \leq x$, but if it's undefined we don't need to do anything special\footnote{we can just provide the unit value $0_\mathbb 1$ of the unit type $\mathbb 1$}.
+  I'm sure there's a clever way to write this more concisely using point-free programming, but I won't do that to you just yet.
+\item
+  Even this simple example can be the basis for important applications.
+  A similar type of function $(f : \mathbb N \to \mathbb N) \times (\all{n} f(n) < n)$ would allow us to make proofs by infinite descent (i.e. a proof by contradiction where the false assumption implies that a known-finite series would have to go on forever).
+  Likewise, only (relatively) small changes are needed to express the class of linear functions from complexity theory
+    $$(f : \mathbb R^{0\mathord+} \to \mathbb R^{0\mathord+}) \times (x_0 : \mathbb R^{0\mathord+}) \times (\varepsilon : \mathbb R^+)\times (\all{x} x \geq x_0 \to \varepsilon \cdot f(x) \leq x)\text{,}$$
+    writing $\mathbb R^{0\mathord+}$ for non-negative reals $\mathbb R^+$ for positive reals.
+  What I've done is extended the dependent tuple to include a ``base point'' ($x_0 : \mathbb R^{0+}$) and ``multiplicative factor'' ($\varepsilon : \mathbb R^+$), then conditioned the proof so that it need only be demonstrated for inputs above the base point ($\all{x} x \geq x_0 \to \ldots$), and finally relaxed the proof's conclusion so that the output can be scaled by the multiplier ($\varepsilon \cdot f(x) \leq x$).
+  I don't know about you, but it took me not insignificant effort in school to firmly understand the moving pieces of big-O notation;
+    with this type specification in front of me, I can clearly see where each part is introduced and over what scope it stays constant, and why.
+  Presumably, the notorious $\varepsilon$--$\delta$ definition of limits in calculus would also be clearer in type theory than informally; such an exercise is left to the reader.
+\end{enumerate}
+\end{aside}
+
+
+TODO: this includes dependent function and pair types, which we can treat as infinitary products and sums, so it makes sense to allow for 1) nullary and binary versions, 2) binary sums, and 3) finite sums/products (i.e. records/variants).
+
+\subsection{Functions}
+\label{subsec:function-types}
+
+\strong{Function types} (or \strong{non-dependent function types} more pedantically) at least have a standard notation in mathematics, even if some authors want to mix it up:
 \begin{center}
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{lp{10cm}}
@@ -364,17 +527,13 @@ $B^A$ & to emphasize the connection with category theory \\
 $B \from A$ & In Ogde de Moor's ``Algebra of Programming'', which is admittedly convenient for function composition \\
 \end{tabular}
 \end{center}
-
-The standard notation for defining functions even looks like you'd expect in an ergonomic type theory:
+The standard mathematical notation for defining functions even looks like you'd expect from an ergonomic type theory:
 \begin{align*}
-f &:\:\! \mathbb R \to \mathbb Z \\
+f &: \mathbb R \to \mathbb Z \\
 f(x) &= \lfloor x/2 \rfloor
 \end{align*}
 
-\subsection{Abstractions}
-
-Often called \strong{functions} at the term level, or also called \strong{lambdas} after the concrete syntax.
-
+The introduction form for function types is just the familiar \strong{lambda} from the \lambdaCalculus{}. Lambdas are also called \strong{abstractions} after its purpose, or simply the unpretentious \strong{function}.
 \begin{center}
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{lp{10cm}}
@@ -390,25 +549,27 @@ $\Lambda x.\,e$
 \end{tabular}
 \end{center}
 
-Strictly, whether a system is Church- or Curry-style has more to do with the definitional approach taken for the calculus in question (from \cite{tapl} \S9.6).
-In Curry-style, we define terms, then semantics, and only then typing given to reject some terms.
-In Church-style, typing is given prior to semantics so that we need not consider ill-typed terms when given behavior.
+Strictly, whether a system is Church- or Curry-style has more to do with the definitional approach taken for the calculus in question (\cite{tapl} \S9.6).
+In \strong{Curry-style}, we define terms, then a reduction semantics, and only then a type system is given to reject some terms.
+In \strong{Church-style}, typing is given prior to the reduction semantics so that we need not consider ill-typed terms when given behavior.
 In practice, Church-style systems often annotate abstractions with the type(s) of their argument(s), whereas Curry-style systems do not.
-Thus, we'll see Church-style sometimes used as a synonym for manifestly-typed and Curry-style as a synonym for implicitly-typed.
+Thus, we'll see Church-style sometimes used as a synonym for \strong{manifestly-typed} and Curry-style as a synonym for \strong{implicitly-typed}; quite frankly, I think the manifest/implicit terms are more to the point.
 
-The eliminator for abstractions is \strong{application}, which in programming is called \strong{function call}.
+The eliminator for abstractions is again familiar: \strong{application}, which in programming is called \strong{function call}.
 \begin{center}
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{lp{10cm}}
 $fe$ & can lead to some confusion if multi-letter variables or metavariables are allowed \\
-$f\;e$ & disambiguates that issue, but easily be missed at a glance \\
+$f\;e$ & disambiguates that issue, but easily missed at a glance \\
 $f(e)$ & crushes ambiguity under its heel, but at the cost of line noise \\
 $\mathsf{Ap}(f, e)$ & because $f(e)$ is notation roughly for substitution in \cite{martin-lof_1984} \\
+$\mathsf{app}(f, e)$ & as above \cite{awodey-etal_2012} \\
 \end{tabular}
 \end{center}
-% TODO: I'd have to cite this
-  % A less well-used notation is $f \cdot e$.
-  % It stems from combinatorial systems, and is sometimes chosen to emphasize algebraic thinking---application being ``the'' binary operator of the system.
+TODO: I'd have to cite this:
+  A less well-used notation is $f \cdot e$.
+  It stems from combinatorial systems, and is sometimes chosen to emphasize algebraic thinking---application being ``the'' binary operator of the system.
+  I think I saw it in ``Algebra of Programming'', where even plain values are considered as functions because something-something-category-theory.
 
 Multiple parameters can be allowed, often as syntactic sugar for a curried version of the function:
 \begin{center}
@@ -432,33 +593,34 @@ $f(a, b, c)$ & when using parens, use standard math notation \\
 \end{center}
 
 It should be noted that a \strong{parameter} is part of the definition of a function.
-An \strong{argument} is a term that is substituted for a function's parameter name in the function's body.
+An \strong{argument} is a term that is substituted for a function's parameter name in the function's body as part of reduction.
 In practice, few people are pedantic enough to correct anyone except possibly in academic writing.
 
 
 \subsection{Dependent Function Types}
 
 The defining feature of dependent type theories---arguably the only type theories worthy of the name ``type theory'' \textit{simpliciter}---is a generalization of non-dependent function type to the \strong{dependent function type}, a.k.a.\ \strong{$\Pi$-type}.
-Sometimes authors refer to this as the \strong{cartesian product type}\cite{barendregt_1991,martin-lof_1984}, which we will see in \S\ref{sec:prod-sum-types} can be confusing.
+Sometimes authors refer to this as the \strong{cartesian product type}\cite{barendregt_1991,martin-lof_1984} or \strong{dependent product type}, which we have seen can be confusing.
 There are a multitude of notations for these types:
-
 \begin{center}
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{lp{10cm}}
 $\prod_{(x \ordcolon A)}B$ & quite common, but I find it not evocative of functions \\
 $\prod_{(x \in A)}B$ & gambino-hyland 2004, and likely others \\
-$\prod(x \ordcolon A).\,B$ & a variant that doesn't direct attention away from the argument type \\
+$(\Pi x \ordcolon A)B$ & a variant that doesn't direct attention away from the argument type \cite{awodey-etal_2012} \\
 % WARNING: since I'm not in display mode, I've had to add a \displaystyle to force the typesetting
 $\displaystyle\prod_{\mathclap{(x : A)}}B$ & suitable for display math \\
 $\prod(A, B)$ & where $B$ is responsible for introducing a variable on its own, as in \cite{martin-lof_1984} \\
-$\prod x \ordcolon A.\,B$ & the parens everywhere can be too much line noise \\
-$\prod x^A.\,B$ & or we can superscript the type, not unlike $\lambda x^\tau.\,e$ \\
+$\prod_{x \ordcolon A} B$ & the parens everywhere can be too much line noise \\
 $(x : A) \to B$ & stresses the function-ness; used often in actual theorem provers/programming languages; dropping the parens certainly would confuse me, but I haven't seen it either \\
-$x^A \to B$ & a (my) variant on the last notation, gives more attention to the variable binder, but could be confused for category-theoretic exponential notation \\
-$A \mathbin{_{x}\mathord\to} B$ & another (my) variant which focuses on the types rather than the bound variable \\
-$\prescript{x:\!\!}{}A \to B$ & the last one can get the presubscript confused with a postsubscript on the argument type, but may need some kerning help \\
+$\prescript{x:\!\!}{}A \to B$ & my own variant which focuses on the types rather than the bound variable \\
 \end{tabular}
 \end{center}
+
+The introduction and elimination forms for dependent function types are exactly those of non-dependent function types: function and function call.
+That is, we can see dependent types simply as being a more sophisticated understanding of what functions truly are, rather than a brand new thing.
+In fact, non-dependent function types in dependent type theory are usually defined as syntactic sugar for when the output type does not depend on the input term:
+  $$A \to B \defeq \Pitype{\_}{A}{B}\text{.}$$
 
 When using $\Pi$-related notation, curried parameters can be combined:
 \begin{center}
@@ -469,19 +631,27 @@ $\displaystyle\prod_{\mathclap{x \ordcolon A, y \ordcolon B}}\;C$ &  \\
 % WARNING: since I'm not in display mode, I've had to add a \displaystyle to force the typesetting
 $\displaystyle\prod_{\substack{x \ordcolon A \\ y \ordcolon B}}C$ & when there are too many types \\
 $(x : A) \to (y : B) \to C$ & associates to the right just like non-dependent functions \\
+$\prescript{x:\!\!}{}A \to \prescript{y:\!}{}B \to C$ & as above \\
 $(x:A)(y:b) \to C$ & found in \cite{kaposi_2020} \\
 \end{tabular}
 \end{center}
 
-\subsection{TODO: Polymorphic Functions}
-
-$$\forall \alpha.\,\tau$$
-$$\forall \alpha^\kappa.\,\tau$$
-$$\forall \alpha\ordcolon\kappa.\,\tau$$
-
-That these notations all follow the same patterns as $\lambda$ is not surprising.
-In dependent type theories with universes, you might say:
-$$\forall \alpha.\,\tau \trieq \prod \alpha^\mathcal U.\,\tau$$
+Non-dependent type theories separate out the type syntax from the term syntax, but as PTSs (\S\ref{sec:pure-type-systems}) demonstrate, there is no underlying difference.
+Nevertheless, these theories are usually reluctant to use the dependent function notation to represent polymorphism, preferring a different notation
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lp{8.2cm}}
+$\forall \alpha.\,\tau$ & the kind is usually inferable \\
+$\forall \alpha^\kappa.\,\tau$ & but can be explicitly stated \\
+$\forall \alpha\ordcolon\kappa.\,\tau$ & and kind annotation has the same spelling variation as type annotation \\
+\end{tabular}
+\end{center}
+In dependent type theories with universes, you might treat these as synonyms for dependent function types
+\begin{align*}
+  \all{\alpha}\tau &\defeq \Pitype{\alpha}{\mathcal U}\tau \text{, and/or}\\
+  \all{\alpha^\sigma}\tau &\defeq \Pitype{\alpha}{\mathcal \sigma}\tau \text{.}
+\end{align*}
+  and use them when the idea to be expressed is more like simple polymorphism rather than true dependent typing.
 
 \subsection{Implicit Arguments and Parameters}
 
@@ -491,19 +661,19 @@ In several languages, the elaborator infers arguments to certain functions, the 
 \begin{tabular}{lp{8.2cm}}
 $\{x : A\} \to B$ & dependent function type with implicit parameter in Adga \\
 $C\;x \To \tau^{(x)}$ & (non-dependent) typeclass argument in Haskell \\
-$\tau^{(x)}$ & implicit type arguments implicitly given from the free type variables (see next paragraph) \\
+$\tau^{(x, y, z \ldots)}$ & implicit type arguments implicitly given from the free type variables (see next paragraph) \\
 \end{tabular}
 \end{center}
 In this way, ``obvious'' or less-salient arguments can be omitted at the call site of values of these types.
 Regardless, it seems that the literature is much more interested in examining type theory kernels rather than formalizing their user-facing syntax.
-In the core theory implicit arguments are it's no different from (possibly dependent) function types; this notation is only used to drive the elaborator.
+In the core theory, values with implicit arguments are no different from (possibly dependent) function types; this notation is only used to drive the elaborator.
 
 In many strongly-typed functional languages, type variables are separate from type names, so it's easy to implicitly quantify over unbound type variables.
 In Haskell or ML this doesn't feel like much of an implicit argument, but once we enter dependent type theory, such automatic quantification is translated into implicit parameters, and then filled with true arguments in the core.
 
 Implicit arguments turn out to be incredibly useful, though, since function composition in a dependent theory would otherwise look like the unwieldy:
 \begin{align*}
-\circ &: \prod_{A,B,C:\mathcal U}(B \to C) \to (A \to B) \to A \to C \\
+\circ &: \Pitype{A,B,C}{\mathcal U} (B \to C) \to (A \to B) \to A \to C \\
 \circ(\mathbb N, \mathbb N, \mathbb N, \mathrm{succ}, \mathrm{succ}) &= \fun{x^\mathbb N}\mathrm{succ}\;(\mathrm{succ}\;x)
 \end{align*}
 which is just a bit much.
@@ -512,12 +682,17 @@ When it's easy (as in this case) to infer the arguments, I much prefer:
 \_ \circ \_ &: \{A, B, C : \mathcal U\} \to (B \to C) \to (A \to B) \to A \to C \\
 \mathrm{succ} \circ \mathrm{succ} &= \fun{x^\mathbb N}\mathrm{succ}\;(\mathrm{succ}\;x)
 \end{align*}
-On the other hand, I find that the literature can often elide arguments that aren't so easy to figure out, which can hinder beginners.
-\cite{hottbook} is a clear offender in my book: not only is the enthusiastic programmer learning about new classes of types, homotopy theory, and the relation between them, but they also have to infer a bunch of arguments the purpose of which isn't quite yet grokked? Sure. \verb!/rant! Admittedly, it's written for a more mathematical audience.
-It's certainly a matter of judgment as to which arguments to make implicit.
+I'm tempted to use the universal quantifier to introduce implicit arguments, as in $\all{A^\U}\tau \defeq \{A : \U\} \to \tau$,
+  but this is inconsistent with the symbol's usage in \SystemF{}, so I'm torn, even though I think $\all{A,B,C}(B \to C) \to (A \to B) \to A \to C$ does look quite good.
+
+A word of caution for the excitable: I find that the literature can often elide arguments that aren't so easy to figure out, which can hinder readers.
+The HoTT Book\cite{hottbook} is a clear offender as far as I'm concerned: not only is the enthusiastic programmer learning about new classes of types, homotopy theory, and the relation between them, but they also have to infer a bunch of arguments the purpose of which isn't quite yet grokked?
+Sure \verb!/rant!.
+Admittedly, that book is written for several audiences, so I'll give them a break, even as I struggle to find the moving parts.
+Regardless, which arguments to make explicit is a matter of taste and judgment, and poor choices can deter otherwise receptive audiences.
 
 Indeed, even theorem provers can have trouble elaborating implicit arguments.
-As such, languages often have syntax for explicitly giving otherwise implicit arguments.
+As such, languages with implicit parameters almost always have syntax for explicitly giving otherwise implicit arguments.
 \begin{center}
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{lp{8.2cm}}
@@ -530,7 +705,7 @@ These syntaxes also need ways to give only some of the implicit arguments explic
 \begin{center}
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{lp{8.2cm}}
-$e\;@\_\;@\tau$ & Haskell \\
+$e\;@\_\;@\tau$ & some theoretical Haskell \\
 $e\;\{\_\}\;\{\tau\}$ & Agda \\
 $e\;\{y = \tau\}$ & Agda for dependent arguments, which has a clear advantage over positional systems \\
 \end{tabular}
@@ -543,17 +718,17 @@ Creating a lambda with implicit arguments can also be done, though I've only see
 $\fun{\{x\}}e$ & Agda \\
 \end{tabular}
 \end{center}
-I'm tempted to riff on the $\Fun{x}e$ that we see in \SystemF{} (which doesn't require an annotation because these type arguments could only be of kind $\star$, or even in \SystemFw{} their kind is always inferrable), but I can see how it could be confusing.
-If so, I could also use $\all{a:A}B$ in place of $\{a : A\} \to B$
+Like using the forall notation for implicit parameters, I'm tempted to riff on the $\Fun{x}e$ that we see in \SystemF{}, but I can see how it could be confusing for people coming to dependent type theory from \SystemF{} or similar theories.
 
-\subsection{Chef's Choice}
+\subsection{Chef's Choice: Functions}
+
 
 We'll see a lot of dependent functions from here on, but I'd rather not have the reader
   \begin{enumerate*}[label=\textit{\roman*})]
   \item learn all the notations just in case, or
   \item get too comfortable with only one notation.
   \end{enumerate*}
-And indeed, the different notations emphasize different parts of the function type: is the variable important?, is the type more important?, should the function-ness be emphasized?, or the polymorphism?
+And indeed, the different notations emphasize different parts of the function type: is the variable important\qcomma{} is the type more important\qcomma{} should the function-ness be emphasized\qcomma{} or the polymorphism?
 
 I will use the following notations and the associated stylesheet provides commands for them:
 \[\begin{array}{llp{6cm}}
@@ -581,22 +756,14 @@ TODO: specifying explicit arguments.
 I'm thinking $compose_{\{A\colon \tau,C\colon \tau'\}}$, but when named arguments are too onerous $compose_{\{\tau,\_,\tau'\}}$ (assuming $compose : \all{A,B,C} (B \to C) \to (A \to B) \to A \to C$).
 The thing is, should I really insist on the braces when the base function is clearly not a metavariable?
 Braces for the implicit parameter of the identity type would just be annoying: let $\cdot=\cdot : \all{A^\U}A \to A \to \U$, then $x = y \leadsto x =_{\{t\}} y$ just looks worse than $x =_{t} y$.
-Perhaps it's simple subscripts $compose_{\tau,\_,\tau'}$ when the implicit args are easy, but $@$-applications when they're larger $compose\;\prescript{}{@}\{C\colon \Pitype{x}{\mathbb R} x \leq a + x \leq b$\}.
-I want to keep the at-sign because curly braces might also end up used for record and variant expressions.
+Perhaps it's simple subscripts $compose_{\tau,\_,\tau'}$ when the implicit args are easy, but $@$-applications when they're larger $compose\;\prescript{@}{}(C\colon \Pitype{x}{\mathbb R} x \leq a + x \leq b)$.
+I want to keep the at-sign because parens are likely to be used all over the place already.
 I mean, I might use $\langle a, b \rangle$ for tuples/records, but I dunno what to do about sums/variants (which btw might need to have a result type hidden away somewhere as in $\prescript{}{\Sigma}\{l\colon \star\}_{\{l\colon \mathbb 1, r\colon \mathbb N\}}$).
 
 
-\section{TODO: Product and Sum Types}
-\label{sec:prod-sum-types}
-
-Although many languages have some sort of finite product types (e.g. structures, tuples, records), few have their duals.
-Since category theory has names for most of these, I've defaulted to using category-theoretic terminology in this section, but I will call out alternate terminologies as normal.
-
-For the record, I'm a big fan of when a calculus already includes one concept, it also includes the dual.
-As it happens, since universal and existential quantification are logical duals, I'd include dependent products (analogous to $\exists$) along with dependent function (analogous to $\forall$).
-
-\subsection{TODO: Binary product type}
-TODO: simple binary product
+\subsection{TODO: Pair types}
+\label{subsec:pair-types}
+TODO: simple binary product as a prelude to infinite sum
 
 \begin{itemize}
   \item $\mathsf{pr}_1, \mathsf{pr}_2$
@@ -609,7 +776,7 @@ I mean, it does make sense: it looks like an indexed family of sets, which can b
 It turns out \cite{martin-lof_1984} calls them the \strong{disjoint union} of \emph{two sets} (emphasis mine), which is true ($A + B \defeq \sum_{x:\mathbb 2}\rec_\mathbb 2(A, B, \U)$), but IMO too concrete.
 Regardless, Martin-L\"of also mentions more ``traditional'' notations $\coprod_{x \in A}B_x$ $\bigcup_{x \in A}B_x$
 
-\subsection{TODO: Dependent product type}
+\subsection{TODO: Dependent pair types}
 
 \begin{itemize}
   \item $\Sigma a:A. B$
@@ -622,7 +789,26 @@ Regardless, Martin-L\"of also mentions more ``traditional'' notations $\coprod_{
 
 TODO: I've found $(e_1, x.e_2)$ binding $x$ to $e_1$ in $e_2$ is quite useful for reducing duplication, and I conjecture could be used to give a hint to type inference of existential types.
 
-\subsection{TODO: Binary coproduct type}
+
+\subsection{TODO: Tuple types}
+
+\subsection{TODO: Unit type}
+\label{subsec:unit-type}
+
+$$\mathbb 0, \mathbf 0$$
+
+$$\mathbb 1, \mathbf 1, \star$$
+$$\star, (), 0_\mathbb 1$$
+
+\subsection{TODO: Record types}
+i.e. label each of the terms in a product
+
+It's fairly easy for non-dependent products, but dependent products mean the map from label to expression is ordered.
+Of course, real languages (Agda, Idris) allow dependent records.
+
+
+\subsection{TODO: Choice types}
+\label{subsec:choice-types}
 
 \begin{itemize}
   \item $l, r$
@@ -630,34 +816,24 @@ TODO: I've found $(e_1, x.e_2)$ binding $x$ to $e_1$ in $e_2$ is quite useful fo
   \item $\iota_1, \iota_2$
 \end{itemize}
 
+TODO: note that this is also derivable as $A + B \defeq \sum_{x:\mathbb 2}\ind_\mathbb 2\;A\;B$... if you have $\mathbb 2$.
+However, $\mathbb 2$ can't be defined with $\W$-types without choice types.
+I'd rather use the theory to extend itself from within (\strong{internal definition}) rather than people adding rules from without (\strong{external definition}); ``Non-Wellfounded Trees in Homotopy Type Theory'' by Ahrens, Capriotti, and Spadotti have some discussion about these terms.
 
-\subsection{TODO: Nullary product and sum types}
+\subsection{TODO: \Nary{} choice types}
 
-$$\mathbb 0, \mathbf 0$$
+\subsection{TODO: Void type}
+\label{subsec:void-type}
 
-$$\mathbb 1, \mathbf 1, \star$$
-$$\star, (), 0_\mathbb 1$$
+\subsection{TODO: Variant types}
 
-\subsection{TODO: Finite products and sums types}
+i.e. label each of the terms in a coproduct
 
-\subsection{TODO: Records and Variants}
-i.e. label each of the terms in a product or coproduct
+this was the best name I could come up with; it's based on \url{https://en.wikipedia.org/wiki/Tagged_union}, but none of the examples wiki lists are quite the same concept as the other examples or what I mean here
 
-It's fairly easy for non-dependent products, but dependent products mean the map from label to expression is ordered.
-Annoyingly, real languages (Agda, Idris) allow dependent records.
 
 TODO: simple enums are just variants of the form $\{\overline{\ell_i\colon \mathbb 1}\}$
 
-\section*{Aside on Bicartesian Closed Categories}
-
-The concepts in \S\S\ref{sec:function-types}--\ref{sec:prod-sum-types} are a good match for what programmers call \strong{structural types}.
-The operations used to create these types also have an analogue in category theory.
-In particular, a \strong{Cartesian closed category} (\strong{CCC}) is one which has a terminal object (corresponding to the unit type), binary products (corresponding to pair types), and exponentials (corresponding to function types).
-A \strong{bicartesian closed category} (\strong{BCCC}) is a CCC which also contains the dual concepts: an initial object (empty type) and binary coproducts (binary sum type).
-If a CCC is also \strong{locally Cartesian closed}, then the analogues of dependent function and pair types are also present.
-
-TODO: I've gotten this info off of wiki.
-Also, \href{https://golem.ph.utexas.edu/category/2006/08/cartesian_closed_categories_an_1.html}{n-Category Caf\'e} has some good links to the major papers and tutorials in the literature.
 
 
 \section{TODO: Recursion and Induction}
@@ -675,7 +851,7 @@ Nevertheless, without some form of inductive definition, total languages would b
 \begin{tabular}{lp{10cm}}
 $\mathsf W_{(a:A)}B$ & \cite{hottbook} \\
 $\displaystyle \mathop{\vphantom{\prod}\textsf{\raisebox{-0.5ex}{\LARGE W}}}_{\mathclap{(a:A)}}B$ & variant analogous to those for $\Pi$-types \\
-$\mathsf W(a:A).\,B$ & variant analogous to those for $\Pi$-types \\
+$(\mathsf W a:A)B$ & variant analogous to those for $\Pi$-types \cite{awodey-etal_2012} \\
 $\mathsf W(A,B)$ & \cite{petersson-synek_1989} \\
 \end{tabular}
 \end{center}
@@ -726,6 +902,8 @@ If $i$ is the name of an arc, then $c\;i$ is the target node of that arc, or in 
 Since $A\;s$ is often a finite set, we can also use the word \strong{position} for the arc names, or even \strong{index} (thus the $i$ choice of metavar above) of the arc.
 Using ``index'' can lead to a false sense that the children form a simple list, whereas complex W-types might be better thought of as having more complex data structures for nodes' children.
 Finally, if we're coming from a set-theoretic perspective---thinking of W-type elements as well-founded sets---a child can also be called a \strong{predecessor}.
+
+FIXME: in the following, I might want to follow \cite{awodey-etal_2012} in introducing $W$ as a metavariable for W-types.
 
 Since this is the place in type theory where (dependent) recursion rears its twisty head, it's worth going over the rules for W-types in some detail.
 I often find it useful to consider the formation as $\W S.\,A$, and require $A : S \to \U$ be an $S$-indexed family.
@@ -825,6 +1003,7 @@ TODO: I think I'm partial to shape depending on index. Consider \texttt{data T (
 
 \subsubsection{After Peterson and Synek}
 
+TODO: it's nice to think about inductive types as ``dendritic''. In this sense, the types required for each child can be said to be the dendritic types.
 
 TODO:
 It seems strange to me that $\mathsf{tree}(a,b,c)$ should retain keep the index type $a$ in the indexed W-type's canonical form.
@@ -1009,7 +1188,7 @@ TODO: mutual inductive families reduce to W-types; how about inductive-inductive
 \begin{center}
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{lp{10cm}}
-$a =_{\!\!A} a'$ & \cite{diy_1989}\cite{hottbook} \\
+$a =_{\!A} a'$ & \cite{diy_1989}\cite{hottbook} \\
 $I(A,a,a')$ & \cite{martin-lof_1984} \\
 $Id_A(a, a')$ & gambino-hyland 2004
 \end{tabular}
@@ -1029,7 +1208,7 @@ An element of an identity type is also called an \strong{equality proof} after t
 I find that using the homotopy interpretation of identity types is less verbose.%
   \footnote{Compare ``given an element of an identity type'' or ``given an equality proof'' vs.\ ``given a path'', and then just \emph{try} not to think about any marginally more interesting statement.}
 An identity type is called a \strong{path space}, and its elements are \strong{paths}.
-This puts the focus squarely on \emph{paths}, but to even name a path $p : x =_{\!\!A} y$, we must identify the \strong{topological space} (or just \strong{space}) $A$ we are working in as well as two \strong{endpoints} in that space $x, y : A$.
+This puts the focus squarely on \emph{paths}, but to even name a path $p : x =_{\!A} y$, we must identify the \strong{topological space} (or just \strong{space}) $A$ we are working in as well as two \strong{endpoints} in that space $x, y : A$.
 This parameterization by space and endpoints is why identity types are manipulated as type families $\mathsf{Id}(\_, \_, \_) : \deparr{A}{\U} A \to A \to \U$ with three indices.
 
 For most types I program with, the corresponding topological space is what I might call a ``dust'': a set of disconnected single points.
@@ -1046,7 +1225,7 @@ More tersely, ``Thanks to path induction, that a property holds for $\refl$ is s
 \begin{equation}\tag{\textsc{=-elim}}\label{eqn:equal-elim}
 \begin{mathprooftree}
 \AxiomC{$\displaystyle
-  \xi : \Pitype{x,y}{\tau} (x =_{\!\tau} y) \to \U
+  \xi : \Pitype{x,y}{\tau} (x =_\tau y) \to \U
 $}
 \AxiomC{$\displaystyle
   f : \Pitype{a}{\tau}\; \xi\;a\;a\;(\refl\;\tau\;a)
@@ -1055,7 +1234,7 @@ $}
 \BinaryInfC{$\displaystyle
   \ind_=\;f : \Pitypes*{
     x,y \scrcolon \tau \\
-    p \scrcolon x =_{\!\tau} y
+    p \scrcolon x =_\tau y
   }\; \xi\;x\;y\;p
 $}
 \end{mathprooftree}
@@ -1149,7 +1328,12 @@ This was created as a place to experiment with my personal selections for notati
 
 TODO: CIC as a foundation for Coq. In fact, the ``cpdt book" (use google) has pointers for interesting properties.
 
+\section{TODO: Well-Known Types}
+
+TODO: bool, nat, Fin n, list, length-indexes list aka vector, binary tree, rose tree, stream and proper stream, syntax/binding trees, 
+
 \section{Pure Type Systems}
+\label{sec:pure-type-systems}
 
 \begin{definition}
 A \strong{Pure Type System} (PTS) is a deductive system parameterized by a triple $(\mathcal S, \mathcal A, \mathcal R)$ of \strong{sorts}, \strong{axioms} $\mathcal A \subseteq \mathcal S^2$, and \strong{rules} $\mathcal R \subseteq \mathcal S^3$.
@@ -1187,7 +1371,7 @@ A \strong{Pure Type System} (PTS) is a deductive system parameterized by a tripl
   \begin{mathprooftree}
     \AxiomC{$A : s$}
     \LeftLabel{$\Gamma \vdash$}
-    \RightLabel{\rlap{$x \nin \dom(\Gamma)$}}
+    \RightLabel{\rlap{$x \notin \dom(\Gamma)$}}
     \UnaryInfC{$x:A \vdash x : A$}
   \end{mathprooftree}
   \end{equation}
@@ -1196,7 +1380,7 @@ A \strong{Pure Type System} (PTS) is a deductive system parameterized by a tripl
     \AxiomC{$A : s$}
     \AxiomC{$t : \tau$}
     \LeftLabel{$\Gamma \vdash$}
-    \RightLabel{\rlap{$x \nin \dom(\Gamma)$}}
+    \RightLabel{\rlap{$x \notin \dom(\Gamma)$}}
     \BinaryInfC{$x:A \vdash t : \tau$}
   \end{mathprooftree}
   \end{equation}
@@ -1265,13 +1449,13 @@ Be wary of Barendregt replacing $s_3$ by $s_2$ in the typing inference for depen
 \begin{example}\label{ex:propeq-symmetry}
 As an example of using path induction, let's prove that whenever we have a proof of $x = y$, we can also prove $y = x$.
 In the theory, the proof is
-$$\mathrm{sym_=} \defeq \fun{A^\U}\ind_=\;(\fun{A^\U, x^A}\refl\;A\;x) : \All_{\mathclap{A:\U; x,y:A}} (x =_{\!\!A} y) \to (y =_{\!\!A} x)$$
+$$\mathrm{sym_=} \defeq \fun{A^\U}\ind_=\;(\fun{A^\U, x^A}\refl\;A\;x) : \All_{\mathclap{A:\U; x,y:A}} (x =_{\!A} y) \to (y =_{\!A} x)$$
 Since this term is little more than a use of $\ind_=$, we can informally abbreviate such a proof to ``by induction''.
 To check that our proof is correct, all we have to do is show that this term has the type we asserted by giving a typing derivation.
 The typing derivation is given in fig.~\ref{fig:sym-proof}.
 To reduce repetition in the derivation, we've made use of a couple helper definitions:
 \begin{align*}
-\mathrm{Sym_=} &\defeq \fun{A^\U, x^A,y^A,p^{x =_{\!\!A} y}}y =_{\!\!A} x \\
+\mathrm{Sym_=} &\defeq \fun{A^\U, x^A,y^A,p^{x =_{\!A} y}}y =_{\!A} x \\
 s &\defeq \fun{A^\U, x^A}\refl\;A\;x
 \end{align*}
 which we instantiate for the \ref{eqn:equal-elim} rule's $\xi, f$ respectively.
@@ -1290,19 +1474,19 @@ I think all the rules need a thorough proof to see where I can abbreviate axioms
     \open
       \hypo{x} {x : A}
       \hypo{y} {y : A}
-      \hypo{p} {p : x =_{\!\!A} y}
-      \have{} {y =_{\!\!A} x} \by{=-form}{A,x,y}
+      \hypo{p} {p : x =_{\!A} y}
+      \have{} {y =_{\!A} x} \by{=-form}{A,x,y}
     \close
     \have{} {\displaystyle
-        \fun{x^A,y^A,p^{x =_{\!\!A} y}} y =_{\!\!A} x : \Pitype*{x,y}{A} (x =_{\!\!A} y) \to \U
+        \fun{x^A,y^A,p^{x =_{\!A} y}} y =_{\!A} x : \Pitype*{x,y}{A} (x =_{\!A} y) \to \U
       } \by{$\Pi$-intro}{}
     \have{xi} {\displaystyle
-        \mathrm{Sym_=}\;A : \Pitype*{x,y}{A} (x =_{\!\!A} y) \to \U
+        \mathrm{Sym_=}\;A : \Pitype*{x,y}{A} (x =_{\!A} y) \to \U
       } \by{definition}{}
     \open
       \hypo{x} {x : A}
-      \have{} {\refl\;A\;x : x =_{\!\!A} x} \by{=-intro}{A,x}
-      \have{} {\refl\;A\;x : (\fun{x^A,y^A,p^{x =_{\!\!A} y}}y =_{\!\!A} x)\;x\;x\;(\refl\;A\;x)} \by{multiple $\beta^{-1}$}{}
+      \have{} {\refl\;A\;x : x =_{\!A} x} \by{=-intro}{A,x}
+      \have{} {\refl\;A\;x : (\fun{x^A,y^A,p^{x =_{\!A} y}}y =_{\!A} x)\;x\;x\;(\refl\;A\;x)} \by{multiple $\beta^{-1}$}{}
       \have{} {\refl\;A\;x : (\mathrm{Sym_=}\;A)\;x\;x\;(\refl\;A\;x)} \by{definition and $\beta^{-1}$}{}
     \close
     \have{} {%\displaystyle
@@ -1314,17 +1498,17 @@ I think all the rules need a thorough proof to see where I can abbreviate axioms
       } \by{definition and $\beta^{-1}$}{}
     \have{} {\displaystyle
         \ind_=\;(s\;A)
-        : \Pitypes*{x,y \scrcolon A \\ p  \scrcolon x =_{\!\!A} y} \mathrm{Sym_=}\;A\;x\;y\;p
+        : \Pitypes*{x,y \scrcolon A \\ p  \scrcolon x =_{\!A} y} \mathrm{Sym_=}\;A\;x\;y\;p
         \\
       } \by{=-elim}{xi,f}
   \close
   \have{} {\displaystyle
       \fun{A^\U}\ind_=\;(s\;A)
-      : \Pitypes*{A \scrcolon \U;\, x,y \scrcolon A \\ p \scrcolon x =_{\!\!A} y} \mathrm{Sym_=}\;A\;x\;y\;p
+      : \Pitypes*{A \scrcolon \U;\, x,y \scrcolon A \\ p \scrcolon x =_{\!A} y} \mathrm{Sym_=}\;A\;x\;y\;p
       \\
     } \by{$\Pi$-intro}{}
   \have{} {\displaystyle
-      \mathrm{sym_=} : \All_{\mathclap{A:\U; x,y:A}} (x =_{\!\!A} y) \to (y =_{\!\!A} x)
+      \mathrm{sym_=} : \All_{\mathclap{A:\U; x,y:A}} (x =_{\!A} y) \to (y =_{\!A} x)
     } \by{definition and $\beta$}{}
   \end{nd}\]
 \caption{Typing derivation for Path Symmetry}\label{fig:sym-proof}
@@ -1335,17 +1519,17 @@ I think all the rules need a thorough proof to see where I can abbreviate axioms
 % \fa\fh A : \U \\
 % \fa\fa\fb x : A \\
 % \fa\fa\fa y : A \\
-% \fa\fa\fj p : x =_{\!\!A} y \\
-% \fa\fa\fa y =_{\!\!A} x : \U & =-form 1,2,3 \\
+% \fa\fa\fj p : x =_{\!A} y \\
+% \fa\fa\fa y =_{\!A} x : \U & =-form 1,2,3 \\
 % \fa\fa \mbox{$\displaystyle
-%   \fun{x^A,y^A,p^{x =_{\!\!A} y}} y =_{\!\!A} x : \Pitype{x,y:A} (x =_{\!\!A} y) \to \U
+%   \fun{x^A,y^A,p^{x =_{\!A} y}} y =_{\!A} x : \Pitype{x,y:A} (x =_{\!A} y) \to \U
 %   $} & $\Pi$-intro \\
 % \fa\fa \mbox{$\displaystyle
-%   \mathrm{Sym_=}\;A : \Pitype{x,y:A} (x =_{\!\!A} y) \to \U
+%   \mathrm{Sym_=}\;A : \Pitype{x,y:A} (x =_{\!A} y) \to \U
 %   $} & definition \\
 % \fa\fa\fh x : A \\
-% \fa\fa\fa \refl\;A\;x : x =_{\!\!A} x & =-intro 1,8 \\
-% \fa\fa\fa \refl\;A\;x : (\fun{x^A,y^A,p^{x =_{\!\!A} y}}y =_{\!\!A} x)\;x\;x\;(\refl\;A\;x) & multiple $\beta$ \\
+% \fa\fa\fa \refl\;A\;x : x =_{\!A} x & =-intro 1,8 \\
+% \fa\fa\fa \refl\;A\;x : (\fun{x^A,y^A,p^{x =_{\!A} y}}y =_{\!A} x)\;x\;x\;(\refl\;A\;x) & multiple $\beta$ \\
 % \fa\fa\fa \refl\;A\;x : (\mathrm{Sym_=}\;A)\;x\;x\;(\refl\;A\;x) & definition and $\beta$ \\
 % \fa\fa \mbox{$\displaystyle
 %     \fun{x^A}\refl\;A\;x
@@ -1356,55 +1540,57 @@ I think all the rules need a thorough proof to see where I can abbreviate axioms
 %   $} & definition and $\beta$ \\
 % \fa\fa \mbox{$\displaystyle
 %   \ind_=\;(s\;A)
-%   : \prod_{\mathclap{\substack{x,y:A \\ p : {x =_{\!\!A} y }}}} \mathrm{Sym_=}\;A\;x\;y\;p
+%   : \prod_{\mathclap{\substack{x,y:A \\ p : {x =_{\!A} y }}}} \mathrm{Sym_=}\;A\;x\;y\;p
 %   $} & =-elim on 7, 13\\
 % \fa \mbox{$\displaystyle
 %   \fun{A^\U}\ind_=\;(s\;A)
-%   : \prod_{\mathclap{\substack{A:\U; x,y:A \\ p : {x =_{\!\!A} y }}}} \mathrm{Sym_=}\;A\;x\;y\;p
+%   : \prod_{\mathclap{\substack{A:\U; x,y:A \\ p : {x =_{\!A} y }}}} \mathrm{Sym_=}\;A\;x\;y\;p
 %   $} & $\Pi$-intro \\
 % \fa \mathrm{sym_=} : \mbox{$\displaystyle
-%   \All_{\mathclap{A:\U; x,y:A}} (x =_{\!\!A} y) \to (y =_{\!\!A} x)
+%   \All_{\mathclap{A:\U; x,y:A}} (x =_{\!A} y) \to (y =_{\!A} x)
 %   $} & definition and $\beta$ \\
 % \end{fitch}
 % \end{equation*}
 
 % \begin{center}
 % \begin{prooftree}
-%     \AxiomC{$x^A,y^A,p^{x =_{\!\!A} y} \vdash y =_{\!\!A} x : \U$}
-%   \UnaryInfC{$\displaystyle \mathrm{Sym_=}\;A : \Pitype{x,y:A} (x =_{\!\!A} y) \to \U$}
-%     \AxiomC{$x:A \vdash \refl\;A\;x : x =_{\!\!A} x$}
-%     \UnaryInfC{$\displaystyle \fun{x^A}\refl\;A\;x : \Pitype{x:A}\; x =_{\!\!A} x$}
-%     \UnaryInfC{$\displaystyle \fun{x^A}\refl\;A\;x : \Pitype{x:A}\; (\fun{x^A,y^A,p^{x =_{\!\!A} y}}y =_{\!\!A} x)\;x\;x\;(\refl\;A\;x)$}
+%     \AxiomC{$x^A,y^A,p^{x =_{\!A} y} \vdash y =_{\!A} x : \U$}
+%   \UnaryInfC{$\displaystyle \mathrm{Sym_=}\;A : \Pitype{x,y:A} (x =_{\!A} y) \to \U$}
+%     \AxiomC{$x:A \vdash \refl\;A\;x : x =_{\!A} x$}
+%     \UnaryInfC{$\displaystyle \fun{x^A}\refl\;A\;x : \Pitype{x:A}\; x =_{\!A} x$}
+%     \UnaryInfC{$\displaystyle \fun{x^A}\refl\;A\;x : \Pitype{x:A}\; (\fun{x^A,y^A,p^{x =_{\!A} y}}y =_{\!A} x)\;x\;x\;(\refl\;A\;x)$}
 %   \UnaryInfC{$\displaystyle
 %     s\;A : \Pitype{x:A}\; (\mathrm{Sym_=}\;A)\;x\;x\;(\refl\;A\;x)
 %   $}
 % \LeftLabel{$\Gamma, A:\U \vdash$}
 % \BinaryInfC{$\displaystyle
 %   \ind_=\;A\;(s\;A)
-%   : \prod_{\mathclap{\substack{x,y:A \\ p : {x =_{\!\!A} y }}}} \mathrm{Sym_=}\;A\;x\;y\;p
+%   : \prod_{\mathclap{\substack{x,y:A \\ p : {x =_{\!A} y }}}} \mathrm{Sym_=}\;A\;x\;y\;p
 % $}
 % \LeftLabel{$\Gamma \vdash$}
 % \UnaryInfC{$\displaystyle
 %   \fun{A^\U}\ind_=\;A\;(s\;A)
-%   : \prod_{\mathclap{\substack{A:\U; x,y:A \\ p : {x =_{\!\!A} y }}}} \mathrm{Sym_=}\;A\;x\;y\;p
+%   : \prod_{\mathclap{\substack{A:\U; x,y:A \\ p : {x =_{\!A} y }}}} \mathrm{Sym_=}\;A\;x\;y\;p
 % $}
 % \UnaryInfC{$\displaystyle
-%   \mathrm{sym_=} : \All_{\mathclap{A:\U; x,y:A}} (x =_{\!\!A} y) \to (y =_{\!\!A} x)
+%   \mathrm{sym_=} : \All_{\mathclap{A:\U; x,y:A}} (x =_{\!A} y) \to (y =_{\!A} x)
 % $}
 % \end{prooftree}
 % \end{center}
 
 \part{Typesetting Tricks}
 
+FIXME $:=$ is too long, try something like $\mathrel{\ordcolon\scalebox{0.618}[1]{$=$}}$
+
 \begin{itemize}
 \item
   There can be too much space between an equals sign and its subscript, especially if the letterform has a forward slant at the front.
   Use \verb/\!/ to squeeze them back together.
   \[\begin{array}{lll}
-    \verb/x =_{\!\tau} y/ & x =_{\!\tau} y \\
-    \verb/x =_{\!\!A} y/ & x =_{\!\!A} y \\
+    \verb/x =_{\!A} y/ & x =_{\!A} y \\
     \verb/x =_{\!B} y/ & x =_{\!B} y \\
-    \verb/\fun{p^{x =_{\!\!A} y}}e/ & \fun{p^{x =_{\!\!A} y}}e \\
+    \llap{c.f. }\verb/x =_\tau y/ & x =_\tau y \\
+    \verb/\fun{p^{x =_{\!A} y}}e/ & \fun{p^{x =_{\!A} y}}e \\
     \llap{c.f. }\verb/\fun{p^{x =_A y}}e/ & \fun{p^{x =_A y}}e \\
   \end{array}\]
 \item
@@ -1455,7 +1641,7 @@ Higher-order types: allows for the definition of (non-nullary) type operators a.
 Higher-kinded: type variables are allowed to range over type operators as well as simple types.
 Higher-rank: quantifiers are allowed to appear to the left of function arrows.
 
-I tend to include $\eta$-conversion in my calculi; it just makes sense that deconstructing a constructor (eliminating an introduction) does nothing.
+I tend to include $\eta$-conversion in my calculi; it just makes sense that deconstructing a constructor (eliminating an introduction) does nothing. Apparently though, extensionality makes type-checking undecidable somehow.
 
 In axioms for typing judgments, threading the context around is often boring and obscures the substance.
 Instead, let's put the shared part on the right when possible:
@@ -1482,12 +1668,12 @@ There are some rules that do need it, though:
   \AxiomC{$e : A$}
   \AxiomC{$T : \tau$}
   \LeftLabel{$\Gamma \vdash$}
-  \RightLabel{when $x \nin \dom(\Gamma)$}
+  \RightLabel{when $x \notin \dom(\Gamma)$}
   \BinaryInfC{$x : T \vdash e : A$}
 \end{mathprooftree}
 \end{equation}
 And I haven't examined if there'd be any confusion between omitting a context vs.\ specifically having no context.
-
+TODO: formally, when we have a rule of the form $\Gamma \vdash {\Delta_1 \vdash \mathcal J_1 \quad \ldots \over \Delta \vdash \mathcal J}$, this stands for $\Gamma,\Delta_1 \vdash \mathcal J_1 \quad \ldots \over \Gamma,\Delta \vdash \mathcal J$.
 
 
 Contexts have some interesting notations.
@@ -1536,7 +1722,7 @@ comp f g x = g (f x)
 \end{verbatim}
 This is very handy, and kinda related to transforming between $\ind f x : \tau$ conclusions and $\ind f : (x:\sigma) \to \tau$ conclusions.
 
-TODO motive and methods for induction principles: what are they?
+TODO motive and methods for induction principles: what are they? DIY Type Theory talks about major and minor premises.
 
 
 TODO:
@@ -1548,89 +1734,10 @@ I'm pretty sure ``reduction strategy'' is actually something related in the lite
 
 TODO: notation for named holes, since they're useful in proof assistants
 
-TODO:
-To understand dependent functions, I always pick this example, which uses only high-school math.
-\begin{enumerate}[label=\textit{\roman*})]
-\item
-  Consider the functions which take a real number as input and produces a real number as output.
-  These are the ordinary functions like $f(x) = x - 3, f(x) = x^2, f(x) = e^x, $ we work with in elementary algebra.
-  If $f$ is such a function, we might use the notation $$f : \mathbb R \to \mathbb R$$ to express this idea more quickly.
-  This notation used in both standard mathematics as well as type theory.
-\item
-  But consider the functions which, as before, take a real input and produce a real output, but now we additionally constrain the output so that it is always less than or equal to whatever the input was.
-  Intuitively, the functions are those that, when plotted, never go above the line $y = x$.
-  TODO: draw a plot using pgfplot.
-  We can see that most of the examples we gave before do not fall into \emph{this} class of function.
-  One function we saw before ($f(x) = x - 3$) follows the rules, as do functions like $f(x) = x$, $f(x) = max(x, 0)$ and so on.
-  However, the other two example functions from (\textit{i}) \emph{do not} follow the rules, and so are not included in this class of function:
-    it's easy to see that $f(x) = e^x$ is always above the line, and $f(x) = x^2$ goes above the line as soon as $x > 1$.
-
-  Can we work with this class of functions more quickly than with prose?
-  Standard mathematics can identify these functions as a set $\{f \in \mathbb R \to \mathbb R \mid \all{x} f(x) \leq x\}$, but this approach has its downsides.
-  For one, I personally think set theory is something of a verbose foundation for mathematics which encourages more use of informal prose in definitions, theorems, and proofs.
-  The more pressing issue is that there's no $f : \ldots$ notation corresponding to that used in (\textit{i}) which would make smooth the transition from simple classes of functions to constrained classes.
-\item
-  In type theory, proofs are first-class objects and can be applied and manipulated formally.
-  If we need to know that the output is always less than the input, the method that first comes to my mind is to attach the required proof to the output.
-  That is, we want something of the form
-    $$f : \mathbb R \to \mathbb R \times (\namedhole{output} \leq \namedhole{input})\text{,}$$
-    but what should we fill in as \namedhole{input} and \namedhole{output}?
-  They obviously need to refer to the input and the output reals, so we somehow need to give names to these things.
-  Dependent functions allow us to give a name to the input, and makes that variable available to form the output type.
-  Let's do that and fill in the \namedhole{input} hole:
-    $$f : (x : \mathbb R) \to \mathbb R \times (\namedhole{output} \leq x)\text{.}$$
-  The output real---as opposed to the output proof---is just the first part of the pair, but dependent pairs allow us to name this half of the pair and use that variable in the second half.
-  This is exactly what we need to fill in \namedhole{output}:
-    $$f : (x : \mathbb R) \to (y : \mathbb R) \times (y \leq x)\text{.}$$
-  Putting it all together, we read the above as ``$f$ is a function which takes a real input ($x$) to an ordered pair consisting of the real ``output'' ($y$) along with a proof that the output is less than or equal to the input ($y \leq x$)''.
-  This is very close to the prose as we wrote in (\textit{ii}), so it seems like this is a good translation of the idea.
-\item
-  There is another, perhaps more accurate way of formalizing our desired class of functions from (\textit{ii}).
-  The idea is to provide first the function, then a proof about that function.
-  If you'll allow me the liberty of extending the $a : \mathbb Z$ notation (which names a value from a set) to also be able to name a proof of a proposition, then standard mathematics might write
-    \begin{align*}
-      f &: \mathbb R \to \mathbb R\text{, and} \\
-      lte &: \all{x} f(x) \leq x\text{,}
-    \end{align*}
-    which in type theory would be written as the specification of a single dependent pair:
-    $$\langle f, lte \rangle : (f : \mathbb R \to \mathbb R) \times (\all{x} f(x) \leq x)\text{.}$$
-  Here we have an ordinary function on reals $f$, but packaged with a proof that for any input ($\forall x$), its outputs ($f(x)$) are less than its inputs ($f(x) \leq x$).
-  In fact, although we use the logical notation $\forall$, in type theory universal quantification is encoded with a dependent function.
-  In this case: $\all{x} f(x) \leq x \mathrel{\;\leadsto\;} (x : \namedhole{t}) \to f(x) \leq x$.
-  In this case, we know $x$ must be a real number, since $f(x)$ must be well-typed, so we can fill in \namedhole{t} with $\mathbb R$ to obtain this fully type-theoretic specification:
-    $$\langle f, lte \rangle : (f : \mathbb R \to \mathbb R) \times ((x : \mathbb R) \to f(x) \leq x)\text{.}$$
-  This makes it clear that what we have is a pair of functions, one of which produces the values we care about, and the other provides the proofs we need for each value.
-  It's easy to see by translating this type back to prose, that this is \emph{also} a good translation of the original idea.
-\item
-  Indeed, the types demonstrated in (\textit{iii}) and (\textit{iv}) are \emph{equally good} translations of the idea in (\textit{ii}),
-    and it even turns out that this equivalence can be formalized.
-  If we read functions as exponentials (i.e. $A \to B$ is like $B^A$), then their equivalence is just an instance of familiar algebraic law $(y \times z)^x = y^x \times z^x$, taking $x$ as the input type, $y$ as the output type, and $z$ as the proof type.
-  This metaphor can be expressed formally in category theory.
-\item
-  Note that so far, I've only demonstrated \emph{total} functions.
-  Although standard mathematical practice would allow $f(x) = \ln(x)$ to be part of the class of functions from (\textit{ii}), but the type-theory translations would not be accurate because $\ln(x)$ is a \emph{partial} function.
-  In standard mathematical practice arrow often denotes partial functions, but in type theory it is \emph{always} total.
-  In type theory, we would say
-    \begin{align*}
-      f &: \mathbb R \to \mathbb 1 + \mathbb R\text{, and} \\
-      lte &: (x : \mathbb R) \to \caseof{f(x)}\{\iota_1(0_\mathbb 1) \To \mathbb 1; \iota_2(y) \To y \leq x\}
-    \end{align*}
-    to express that if $f(x) = y$ is defined we need $y \leq x$, but if it's undefined we don't need to do anything special\footnote{we can just provide the unit value $0_\mathbb 1$ of the unit type $\mathbb 1$}.
-  I'm sure there's a clever way to write this more concisely using point-free programming, but I won't do it just yet.
-\item
-  Even this simple example can be the basis for important applications.
-  A similar type of function $(f : \mathbb N \to \mathbb N) \times (\all{n} f(n) < n)$ would allow us to make proofs by descent.
-  Likewise, only (relatively) small changes are needed to express the class of linear functions in complexity theory
-    $$(f : \mathbb R^{0\mathord+} \to \mathbb R^{0\mathord+}) \times (x_0 : \mathbb R^{0\mathord+}) \times (\varepsilon : \mathbb R^+)\times (x \geq x_0 \to \varepsilon \cdot f(x) \leq x)\text{,}$$
-    writing $\mathbb R^{0\mathord+}$ for non-negative reals $\mathbb R^+$ for positive reals.
-  For those not familiar with type theory, what I've done is added a ``base point'' $x_0$ and ``multiplicative factor'' $\varepsilon$ to the dependent tuple, conditioned the proof so that it need only be demonstrated for inputs above the base point ($x \geq x_0 \to \ldots$), and relaxed the proof so that the output can be scaled by the multiplier $\varepsilon \cdot f(x) \leq x$.
-  I don't know about you, but it took me not insignificant effort in school to formally understand the moving pieces of big-O notation;
-    with this type in front of me, I can clearly see where each part is introduced and over what scope it stays constant, and why.
-  Presumably, the notorious $\varepsilon$--$\delta$ definition of limits would also be clearer in type theory than informally; such an exercise is left to the reader.
-\end{enumerate}
 
 
-TODO: it seems like dependent pairing should be associative, but I doubt the notation suports it. Consider
+
+TODO: it seems like dependent pairing should be associative, but I doubt the notation supports it. Consider
   $$a : A \times (b : B(a) \times C(a,b))\quad\text{versus}$$
   $$(a : A \times b : B(a)) \times C)$$
 What if I could develop rules to make such notation sensible?
@@ -1657,6 +1764,192 @@ class Proofy t where
 \end{verbatim}
 where I would want the proof to always be erased before runtime.
 
+TODO:
+``Type Theory base on Dependent Inductive and Coinductive Types'' by Basold and Geuvers claims to derive Martin-L\"of type theory with only the rules for W- and M-types.
+
+TODO: what is the axiomatic difference between extensional and intentional type theory. what consequences does either choice have?
+
+
+TODO:
+Type theories have primitive types and type constructors.
+Primitive types may (and usually) add information:
+  $\mathbb 0$ and $\mathbb 1$ do not add information, since entropy is zero i.e. $\ln(number of inhabitants)$,
+  but as soon as we get to $\mathbb 2$ a.k.a. booleans/bits, we start to add information.
+The entropy of universes is interesting because their entropy depends on the range of primitive types otherwise defined.
+$\Pi$-, $\Sigma$-, $+$-, $\W$-, $\mathsf M$-, and $=$-types are all constructors: they only move around existing information.
+
+TODO: there are some really subtle fundamental choices about type theories that significantly ipact its relations to category theory and computability and constructive mathematics.
+Predicativity has at least a couple different meanings. Extensional vs. Intentional also has some meanings: function extensionality vs. univalence vs. Axiom K/K-rule/uniquenes of identity proofs (UIP). Propositional equality vs. judgemental equality rules.
+These can impact decidability of type checking and the more subtle idea of determining a mathematical object uniquely.
+
+
+TODO:
+Each type in type theory comes with formation, introduction, elimination, computation, and equality rules.
+The axiom $$t : \tau \quad t \cong t' \over t : \tau'$$ is convenient for proofs because it allows the proof-checker to expand definitions for us automatically (e.g. $0 + x \cong x$ by expanding the definition of $+$, so the proof of $0 + x = x$ is simply $\refl$).
+However, congruence rules have no directionality, which means a na\"ive type checker might get lost stubling around various equivalent types trying to find a match.
+However, if we specify congruences from a (confluent) reduction relation instead, the typechecker only really has one path to go down, and if the relation is strongly normalizing then we can see that proof checking will terminate.
+(TODO: honestly, I'm not sure if termination is all it's cracked up to be. a proof might require a determination a solution to a busy-beaver problem, which is usually indistinguishable from non-termination for practical purposes. If we were only going to load and run a certified program, then we would still need the typechecker to verify the certification proof within a timeout, at which point it seems we may as well allow non-termination)
+I'm not entirely sure about equality rules, but I think they specify $\eta$-conversion reductions, but if so, then there is an obvious direction of simplification and adding them to the theory \emph{should} not compromise strong normalization.
+
+TODO:
+The entries in gray are only rarely attested, and then usually occur alongside non-standard relation symbols.
+The entries in red I have not seen attested---probably because there's no real need for them---but nevertheless seem reasonable to me.
+\begin{center}
+\begin{tabular}{cc|cccc}
+\multicolumn{2}{r|}{Transitivity}     & \multicolumn{2}{c}{no} & \multicolumn{2}{c}{yes} \\
+\multicolumn{2}{r|}{Reflexivity} & no & yes & no & yes \\
+Symmetry & Congruence \\
+\hline
+\multirow{2}{*}{no} & no  & $\longto$ & \textcolor{red}{$\longto^?$} & $\longto^+$ & $\longto^*$, \textcolor{gray}{$\relbar\joinrel\twoheadrightarrow$}, $\downarrow$ \\
+ & yes                    &  &  &  & \textcolor{gray}{$=\joinrel\mathrel{\mathrlap\To\To}$}, \textcolor{gray}{$\relbar\joinrel\twoheadrightarrow$} \\
+\multirow{2}{*}{yes} & no & \textcolor{red}{$\longleftrightarrow$} &  &  & $\equiv$, \textcolor{gray}{$=$} \\
+ & yes                    &  &  &  & $\cong$,$\simeq$ \\
+\end{tabular}
+\end{center}
+(I've also seen compatibility for congruence, but wiki prefers congruence except in the discussion about Felliesen's contribution to small-step semantics.)
+I saw (the ugly) $=\!>\!>$ in ``Abstract Types have Existential Types'' (except there, they use $\To$ for one-step reduction), which I've tried to pretty up as $=\joinrel\mathrel{\mathrlap\To\To}$.
+Barendregt takes compatibility as a prerequisite and uses $\twoheadrightarrow$ for reflexive-transitive(-congruent by assumption) closure, but this doesn't generalize to the plain transitive closure which is sometimes used in understanding evaluation (e.g. propositions like ``either $t$ is in normal form, stuck, or there exists a $t'$ such that $t \longleftrightarrow t'$'') .
+Texts seem to expand relations with closures along the hierarchy $\mathsf{transitive > reflexive > symmetric > compatible}$, unless compatibility is either assumed or ignored.\footnote{I can't believe I've actually ended up using linguistics here, but I really shouldn't be surprised.}
+I saw $\simeq$ in Ulf Norell's thesis.
+
+TODO: While I'm at it, here are some relation symbols
+\begin{center}
+\begin{tabular}{cc|cccc}
+\multicolumn{2}{r|}{Reflexivity}     & \multicolumn{2}{c}{no} & \multicolumn{2}{c}{yes} \\
+\multicolumn{2}{r|}{Transitivity} & no & yes & no & yes \\
+Symmetry & Totality \\
+\hline
+no & --- & $R$ \\
+yes & --- &  & & $\approx$ & $=$,$\equiv$,$\cong$,$\simeq$  \\
+\multirow{2}{*}{anti} & no & $\in$ & $\prec$,$\subset$ & & $\preceq$,$\subseteq$ \\
+ & yes                    & & $<$ & & $\leq$ \\
+\multirow{2}{*}{anti$^\text{op}$} & no & $\ni$ & $\succ$,$\supset$ & & $\succeq$,$\supseteq$ \\
+ & yes                    & & $>$ & & $\geq$ \\
+\end{tabular}
+\end{center}
+Other stuff: $\sqsubset$
+
+TODO:
+When working with HM inference variants, we treat types as being more or less specific/polymorphic than other types.
+I like the example from ``Seven Sketches in Compositionality'' where since a tiger is a type of mammal, we say ``tiger $\leq$ mammal''.
+In this vein, I'd like it if these theories first showed that types form a partial order, and use the version which can be read as ``is a subtype'' rather than ``is less polymorphic''.
+After all, a subtype (e.g. an instance of a polymorphic type) contains ``fewer'' elements than its supertype.
+
+TODO: pattern matching as syntactic sugar.
+Consider a complex pattern match like
+\[\begin{array}{l}
+  \caseof{e} \{            \textrm{Left}\;\textrm{Zero} \To e_1 \\
+    \hphantom{\caseof{e}\mathstrut}; \textrm{Left}\;(\textrm{Succ}\;x) \To e_2 \\
+    \hphantom{\caseof{e}\mathstrut}; \textrm{Right}\;x \To e_3 \\
+    \hphantom{\caseof{e}\mathstrut}\}
+\end{array}\]
+  which is perfectly common in wild languages, but annoying to formalize in type theory because it introduces a new syntactic form (patterns).
+However, it can be translated into a type theory with only single-constructor matching (which TODO we have seen is just syntactic sugar for induction).
+In the simplest translation (i.e. without using delimited continuations) however, we will have to be very careful about variable binding.
+To begin, we express each arc as a function of the variables bound in the source code; the variables bound in the translation's arcs will have to be chosen fresh not only with respect to the context and that arc's expression, but also between all the arcs.
+We will use $\hat x_{i,j}$ for variables:
+\[\begin{array}{l}
+  \caseof{e} \{            \textrm{Left}\;\textrm{Zero} \To e_1 \\
+    \hphantom{\caseof{e}\mathstrut}; \textrm{Left}\;(\textrm{Succ}\;\hat x_{2,1}) \To (\fun{x}e_2^{(x)})\;\hat x_{2,1} \\
+    \hphantom{\caseof{e}\mathstrut}; \textrm{Right}\;\hat x_{3,1} \To (\fun{x}e_3^{(x)})\;\hat x_{3,1} \\
+    \hphantom{\caseof{e}\mathstrut}\}
+\end{array}\]
+We can see now why it is useful to be able to annotate metavariables with their allowed free variables: we can be sure just by looking at the syntactic scheme that none of the $\hat x_{i,j}$ appear in any of the $e_i$, even though the syntax would bind them there.
+To save ink, we will define each $\hat f_i \defeq \fun{\overline{x}}e_i^{(\overline{x})}$ for the appropriate choice of $\overline{x}$es.
+Our next step is to push down any patterns we find nested directly under the top-level discriminator, arranging the various $\hat f_i$ appropriately.
+We will need even more fresh variables here to bind the intermediately-matched values; I will use $\hat y_i$.
+\[\begin{array}{l}
+  \caseof{e} \{            \textrm{Left}\;\hat y_1 \To
+      \caseof{\hat y_1}\{                                                             \textrm{Zero} \To \hat f_1 \\
+      \hphantom{\caseof{e}\{\textrm{Left}\;\hat y_1 \To \caseof{\hat y_1}\mathstrut}; \textrm{Succ}\;\hat x_{2,1} \To \hat f_2\;\hat x_{2,1} \\
+      \hphantom{\caseof{e}\{\textrm{Left}\;\hat y_1 \To \caseof{\hat y_1}\mathstrut}\} \\
+    \hphantom{\caseof{e}\mathstrut}; \textrm{Right}\;\hat x_{3,1} \To \hat f_3\;\hat x_{3,1} \\
+    \hphantom{\caseof{e}\mathstrut}\}
+\end{array}\]
+In this case, each deconstructor was enumerated explicitly, but when some are left implicit by wildcard patterns, we may find some sets of arcs duplicated.
+\[\begin{array}{l}
+  \caseof{e} \{            \textrm{Left}\;\textrm{Zero} \To e_1 \\
+    \hphantom{\caseof{e}\mathstrut}; x \To e_2 \\
+    \hphantom{\caseof{e}\mathstrut}\}
+\end{array}\]
+$$\leadsto$$
+\[\begin{array}{l}
+  \caseof{e} \{                    \textrm{Left}\;\hat y_1 \To \caseof{\hat y_1} \\
+      \hphantom{\caseof{e}\mathstrut}\quad\{ \textrm{Zero} \To \hat f_1 \\
+      \hphantom{\caseof{e}\mathstrut}\quad;  \caseof{e}\{\hat x_{2,1} \To \hat f_2\;\hat x_{2,1}\} \\
+      \hphantom{\caseof{e}\mathstrut}\quad\} \\
+    \hphantom{\caseof{e}\mathstrut}; \hat x_{2,1} \To \hat f_2\;\hat x_{2,1} \\
+    \hphantom{\caseof{e}\mathstrut}\}
+\end{array}\]
+Of course, we could eliminate the duplication with a simple let- or where-binding.
+
+TODO: Ulf Norell's thesis is a good source for some very introductory material and its citations: especially telescopes and a history of dependently-typed programming languages
+
+TODO: universe level reconstruction strikes me as being the same idea behind $\mathrm{ML^F}$ what can get principle types even in the presence of subtyping.
+
+TODO: my opinion is that the syntactic approach to type theory is perfectly fine, and in the case of designing a practical programming language, it is \emph{to be preferred} because programmers interact with their code on the level of reading the source code---i.e.\ syntactically
+
+TODO: I'd like to introduce mutually-recursive judgments using something like a call graph
+
+TODO \url{https://www.youtube.com/watch?v=Ft8R3-kPDdk}
+
+TODO: in set theory, the elements come first, and then the sets. In type theory, the elements and the sets always come together and are inseparable. \url{https://www.youtube.com/watch?v=beuLVB-fNJg}. Thus, type theory ficuses on structural properties rather than on properties of representations: mathematical objects are given by what we can do with it rather than how it is defined. ``It's not what we are underneath but what we \emph{do} that defines us.''
+
+TODO \url{https://www.youtube.com/watch?v=beuLVB-fNJg}:
+Let's say we have
+  \begin{align*}
+  \mathrm{isIso}(f^{A \to B}) \defeq &
+  \deptimes{g}{B \to A} \\&
+  \vardeptimes{gf}{(\all{x}(g \circ f)(x) =_A x)} \\&
+  \vardeptimes{fg}{(\all{y}(f \circ g)(y) =_B y)} \\&
+  ( coh : \all{x} (fg \circ f)(x) =_{f(x) =_{\!B} f(x)} (f \circ gf)(x) )
+  \end{align*}
+(I'm not sure about the type inference I've done in that last clause. I think that the $f$ in $f \circ gf$ has to be a version lifted over identity types.)
+The last clause is coherence (which I've seen somewhere), and is expresses that when we want to say that $f(g(f(x)) = f(x)$, there are two ways of doing that:
+  $$\lefteqn{
+    \overbrace{\phantom{f(g}}^{\mathclap{\text{use $f \circ g = id$}}}
+  }
+  f(\underbrace{g(f}_{\mathclap{\text{use $g \circ f = id$}}}(x))) = f(x)
+  $$
+but we could also have formulated coherence from the other side, that $g(f(g(y))) = g(y)$.
+Together, these two coherence properties are an adjunction in category theory.
+Just one gives a half-adjunction, but since the type theory operates in a sufficiently rich category, we can get one from the other.
+If you state both however, you need to add more, even higher-level coherence properties.
+Without coherence, you only have isomorphism of sets; for type isomorphism in general, you must include coherence because not all equality paths are identical.
+
+
+Cubical Type Theory is the ``proper'' implementation of HoTT: it gives a computational character to the univalence axiom (we don't like axioms b/c they do not have reduction behavior), and Cubical Agda is what Altenkirch likes as a real-world implementation.
+
+Quotient inductive types formalize HITs that correspond to HoTT sets.
+
+TODO:
+I want to prove that $(f \circ g = id) \iff (\all{x} (f \circ g)(x) = x)$.
+The forward direction is simple, but I wonder about the backward direction.
+
+TODO:
+\url{https://www.youtube.com/watch?v=bNG53SA4n48} puts more fuel on the fire of ``why are intensional/extensional used in so many different ways?''
+
+TODO:
+\begin{align*}
+\lnot\lnot(A + \lnot A)
+  &\equiv (\lnot(A + \lnot A)) \to \mathbb 0 \\
+  &\equiv (\lnot(A + (A \to \mathbb 0))) \to \mathbb 0 \\
+  &\equiv ((A + (A \to \mathbb 0)) \to \mathbb 0) \to \mathbb 0 \\
+  &\equiv \all{A^\U} ((A + (A \to \mathbb 0)) \to \mathbb 0) \to \mathbb 0 \\
+\fun{A^\U}\fun{p^{(A + (A \to \mathbb 0)) \to \mathbb 0}} ???
+  &: \all{A^\U} ((A + (A \to \mathbb 0)) \to \mathbb 0) \to \mathbb 0 \\
+\end{align*}
+
+
+TODO:
+I am most interested in the computation aspects.
+For example, it is important that that typechecking be deterministic, because that means that the typechecker terminates.
+Principle types matters because then there is no ambiguity in memory layout.
+Confluence matters because then the order of optimization steps does not change the answer.
+Eta-conversion matters because it eliminates a nilpotent stack frame.
+So, what computational thing does Univalence get me\qcomma or higher inductive(-inductive) types\qcomma extensionality?
+
 \printbibliography
+
 
 \end{document}

@@ -1,11 +1,20 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{typetheory}
 
-\RequirePackage{amsmath,MnSymbol,mathtools}
+\RequirePackage{amssymb}
+\RequirePackage{latexsym}
+% \RequirePackage{MnSymbol} % WARNING this changes a lot of symbols $=, \cong, \sineq$ to be stubby and ugly, and collapses $\emptyset$ and $\varnothing$
+\RequirePackage{amsmath,mathtools}
 \RequirePackage{mathrsfs} % provides \mathscr, which is an alternative caligraphic font
 \RequirePackage{bussproofs,fitch}
-\RequirePackage{bbold} % TODO or should I use dsfont and \mathds?
 % FIXME: why is \emptyset rendering identical to \varnothing?
+
+% FIXME: is there any good solution for blackboard bold numerals?
+  % \RequirePackage{bbold} % WARNING: sans-serif looks awful
+  % \RequirePackage{dsfont} % WARNING: missing numerals except 1
+  % \RequirePackage[showoptions]{mathalpha} % NOTE: maybe this approach is more configable?
+  %   \RequirePackage[bb=boondox]{mathalpha} % WARNING: sans-serif again
+    \RequirePackage[bb=dsserif,bbscaled=1.1]{mathalpha} % WARNING: a little blocky/angular, but at least it's serif
 
 \RequirePackage{varwidth}
 
@@ -28,6 +37,8 @@
   {\varwidth{.9\textwidth}\centering\leavevmode}
   {\DisplayProof\endvarwidth}
 
+\newcommand\qcomma{?\kern -0.9ex,}
+
 %%%%%% Common Functions and Relations %%%%%%
 
 \newcommand*\dom{\mathrm{dom}}
@@ -35,6 +46,8 @@
 
 \newcommand*\ordcolon{\mathord:} % eliminate space around a colon
 \newcommand*\scrcolon{\mathbin{\,\ordcolon\,}} % colon can get crunched in subscripts
+
+\newcommand\varexp[1]{\mathrm{e}^{#1}}
 
 %%%%%% Common Notations %%%%%%
 
@@ -101,7 +114,7 @@
 \newcommand\dto[1]{\mathbin{\prescript{}{#1}{\mathord{\to}}}}
   % \newcommand\deparr[3]{#2 \dto{#1} #3}
 \newcommand\Pitype{\@ifstar{\Pitype@star}{\Pitype@nostar}}
-  \newcommand\Pitype@nostar[2]{\prod_{#1 \scrcolon #2}}
+  \newcommand\Pitype@nostar[2]{\prod_{#1 : #2}}
   \newcommand\Pitype@star[2]{\prod_{\mathclap{#1 \scrcolon #2}}}
 \newcommand\Pitypes{\@ifstar{\Pitypes@star}{\Pitypes@nostar}}
   \newcommand\Pitypes@nostar[1]{\prod_{\substack{#1}}}
@@ -109,7 +122,8 @@
 \newcommand\deparr[2]{({#1}:{#2}) \to}
 \newcommand\vardeparr[3][]{\prescript{{#2}\ordcolon\!{#1}}{}{{#3}} \to}
 
-\newcommand\vardeptimes[4][]{\prescript{{#2}\ordcolon\!{#1}}{}{{#3}} \times {#4}}
+\newcommand\deptimes[2]{({#1}:{#2}) \times}
+\newcommand\vardeptimes[3][]{\prescript{{#2}\ordcolon\!{#1}}{}{{#3}} \times}
 
 
 \newcommand\W{\mathsf{W}}
@@ -132,7 +146,10 @@
 
 %%%%%% Names for Things %%%%%%
 
+\newcommand\lambdaCalculus{$\lambda$-calculus}
 \newcommand\SystemF{System $\mathrm F$}
 \newcommand\SystemFw{System $\mathrm F_\omega$}
 \newcommand\SystemU{System $\mathrm U$}
 \newcommand\SystemUminus{System $\mathrm U^-$}
+
+\newcommand\Nary{$n$-ary}
