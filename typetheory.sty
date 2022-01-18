@@ -22,7 +22,9 @@
 
 \newcommand\strong[1]{{\bf#1}} % to highlight definitions
 % TODO: make sure it chooses an appropriate font style depending on context
-\newcommand\supth{\textsuperscript{th}}
+\def\supth/{\textsuperscript{th}}
+
+\def\Nary/{$n$-ary}
 
 % handy arrow synonyms
 \newcommand*\To{\Rightarrow}
@@ -37,7 +39,10 @@
   {\varwidth{.9\textwidth}\centering\leavevmode}
   {\DisplayProof\endvarwidth}
 
-\newcommand\qcomma{?\kern -0.9ex,}
+\def\qcomma/{?\kern -0.9ex,}
+
+\newcommand\mcolorbox[2]{\colorbox{#1}{$#2$}}% FIXME carry along the math style
+\newcommand\mgray[1]{\mcolorbox{lightgray}{#1}}
 
 %%%%%% Common Functions and Relations %%%%%%
 
@@ -116,10 +121,13 @@
 \newcommand\Pitype{\@ifstar{\Pitype@star}{\Pitype@nostar}}
   \newcommand\Pitype@nostar[2]{\prod_{#1 : #2}}
   \newcommand\Pitype@star[2]{\prod_{\mathclap{#1 \scrcolon #2}}}
+\newcommand\PitypeR[2]{\prod_{#1 \scrcolon \mathrlap{#2}}}
+
 \newcommand\Pitypes{\@ifstar{\Pitypes@star}{\Pitypes@nostar}}
   \newcommand\Pitypes@nostar[1]{\prod_{\substack{#1}}}
   \newcommand\Pitypes@star[1]{\prod_{\mathclap{\substack{#1}}}}
 \newcommand\deparr[2]{({#1}:{#2}) \to}
+\newcommand\deparri[2]{\{{#1}:{#2}\} \to}
 \newcommand\vardeparr[3][]{\prescript{{#2}\ordcolon\!{#1}}{}{{#3}} \to}
 
 \newcommand\deptimes[2]{({#1}:{#2}) \times}
@@ -133,23 +141,22 @@
 
 \newcommand\refl{\mathsf{refl}}
 
-\newcommand\letPart{\mathinner{\textsf{let}}}
-\newcommand\letrecPart{\mathinner{\textsf{let rec}}}
-\newcommand\inPart{\mathinner{\textsf{in}}}
+\newcommand\letPart{\mathinner{\textbf{let}}}
+\newcommand\letrecPart{\mathinner{\textbf{let rec}}}
+\newcommand\inPart{\mathinner{\textbf{in}}}
 \newcommand\letin[1]{\letPart{#1}\inPart}
-\newcommand\where{\mathinner{\textsf{where}}}
+\newcommand\where{\mathinner{\textbf{where}}}
 
-\newcommand\casePart{\mathinner{\textsf{case}}}
-\newcommand\ofPart{\mathinner{\textsf{of}}}
+\newcommand\casePart{\mathinner{\textbf{case}}}
+\newcommand\ofPart{\mathinner{\textbf{of}}}
 \newcommand\caseof[1]{\casePart{#1}\ofPart}
 
 
 %%%%%% Names for Things %%%%%%
 
-\newcommand\lambdaCalculus{$\lambda$-calculus}
-\newcommand\SystemF{System $\mathrm F$}
-\newcommand\SystemFw{System $\mathrm F_\omega$}
-\newcommand\SystemU{System $\mathrm U$}
-\newcommand\SystemUminus{System $\mathrm U^-$}
-
-\newcommand\Nary{$n$-ary}
+% Thanks to https://tex.stackexchange.com/a/147061 for this trailing-slash solution
+\def\lambdaCalculus/{$\lambda$-calculus}
+\def\SystemF/{System $\mathrm F$}
+\def\SystemFw/{System $\mathrm F_\omega$}
+\def\SystemU/{System $\mathrm U$}
+\def\SystemUminus/{System $\mathrm U^-$}

@@ -8,6 +8,9 @@
 
 \usepackage{graphicx} % support the \includegraphics command and options
 
+%%% FONTS
+\usepackage[T1]{fontenc}
+
 %%% PACKAGES
 \usepackage{typetheory}
 
@@ -337,7 +340,7 @@ In this case, typical ambiguity is no longer a `sort inference' problem , since 
 
 \subsection{Special universes}
 
-Given the prevalence of polymorphic functions, the most common universe to see in type theory is $\U_0$, which is the universe of \strong{small types}, or in \SystemFw{} just ``types''.
+Given the prevalence of polymorphic functions, the most common universe to see in type theory is $\U_0$, which is the universe of \strong{small types}, or in \SystemFw/ just ``types''.
 Indeed saying ``$A$ is a type'' is a prose expression for the typing judgment $A : \U_0$ when working primarily with non-dependent types.
 In the usual lambda cube formulations, this universe is referred to as the \strong{sort of types}.
 \begin{center}
@@ -460,10 +463,10 @@ To introduce dependent types, I always pick this example, which uses only high-s
   They obviously need to refer to the input and the output reals, so we somehow need to give names to these things.
   Dependent functions allow us to give a name to the input, and makes that variable available to form the output type.
   Let's do that and fill in the \namedhole{input} hole:
-    $$f : (\colorbox{lightgray}{x :} \mathbb R) \to \mathbb R \times (\namedhole{output} \leq x)\text{.}$$
+    $$f : (\mgray{x :} \mathbb R) \to \mathbb R \times (\namedhole{output} \leq x)\text{.}$$
   The output real---as opposed to the output proof---is just the first part of the pair, but dependent pairs allow us to name this half of the pair and use that variable in the second half.
   This is exactly what we need to fill in \namedhole{output}:
-    $$f : (x : \mathbb R) \to (\colorbox{lightgray}{y :} \mathbb R) \times (y \leq x)\text{.}$$
+    $$f : (x : \mathbb R) \to (\mgray{y :} \mathbb R) \times (y \leq x)\text{.}$$
   Putting it all together, we read the above as ``$f$ is a function which takes a real input ($x$) to an ordered pair consisting of the real ``output'' ($y$) along with a proof that the output is less than or equal to the input ($y \leq x$)''.
   This is very close to the prose as we wrote in (\textit{ii}), so it seems like this is a good translation of the idea.
 \item
@@ -533,7 +536,7 @@ f &: \mathbb R \to \mathbb Z \\
 f(x) &= \lfloor x/2 \rfloor
 \end{align*}
 
-The introduction form for function types is just the familiar \strong{lambda} from the \lambdaCalculus{}. Lambdas are also called \strong{abstractions} after its purpose, or simply the unpretentious \strong{function}.
+The introduction form for function types is just the familiar \strong{lambda} from the \lambdaCalculus/. Lambdas are also called \strong{abstractions} after its purpose, or simply the unpretentious \strong{function}.
 \begin{center}
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{lp{10cm}}
@@ -546,6 +549,8 @@ $\lambda x^\sigma.\,e$
   & Church-style using superscript annotation makes the type less commanding, but can also scrunch up detail \\
 $\Lambda x.\,e$
   & in non-dependent theories, type abstraction is often done with a capital lambda; most theories can also infer the kind, so they leave it implicit \\
+$x \mapsto e$
+  & \cite{hottbook} because... I don't really know \\
 \end{tabular}
 \end{center}
 
@@ -683,7 +688,7 @@ When it's easy (as in this case) to infer the arguments, I much prefer:
 \mathrm{succ} \circ \mathrm{succ} &= \fun{x^\mathbb N}\mathrm{succ}\;(\mathrm{succ}\;x)
 \end{align*}
 I'm tempted to use the universal quantifier to introduce implicit arguments, as in $\all{A^\U}\tau \defeq \{A : \U\} \to \tau$,
-  but this is inconsistent with the symbol's usage in \SystemF{}, so I'm torn, even though I think $\all{A,B,C}(B \to C) \to (A \to B) \to A \to C$ does look quite good.
+  but this is inconsistent with the symbol's usage in \SystemF/, so I'm torn, even though I think $\all{A,B,C}(B \to C) \to (A \to B) \to A \to C$ does look quite good.
 
 A word of caution for the excitable: I find that the literature can often elide arguments that aren't so easy to figure out, which can hinder readers.
 The HoTT Book\cite{hottbook} is a clear offender as far as I'm concerned: not only is the enthusiastic programmer learning about new classes of types, homotopy theory, and the relation between them, but they also have to infer a bunch of arguments the purpose of which isn't quite yet grokked?
@@ -718,7 +723,7 @@ Creating a lambda with implicit arguments can also be done, though I've only see
 $\fun{\{x\}}e$ & Agda \\
 \end{tabular}
 \end{center}
-Like using the forall notation for implicit parameters, I'm tempted to riff on the $\Fun{x}e$ that we see in \SystemF{}, but I can see how it could be confusing for people coming to dependent type theory from \SystemF{} or similar theories.
+Like using the forall notation for implicit parameters, I'm tempted to riff on the $\Fun{x}e$ that we see in \SystemF/, but I can see how it could be confusing for people coming to dependent type theory from \SystemF/ or similar theories.
 
 \subsection{Chef's Choice: Functions}
 
@@ -728,7 +733,7 @@ We'll see a lot of dependent functions from here on, but I'd rather not have the
   \item learn all the notations just in case, or
   \item get too comfortable with only one notation.
   \end{enumerate*}
-And indeed, the different notations emphasize different parts of the function type: is the variable important\qcomma{} is the type more important\qcomma{} should the function-ness be emphasized\qcomma{} or the polymorphism?
+And indeed, the different notations emphasize different parts of the function type: is the variable important\qcomma/ is the type more important\qcomma/ should the function-ness be emphasized\qcomma/ or the polymorphism?
 
 I will use the following notations and the associated stylesheet provides commands for them:
 \[\begin{array}{llp{6cm}}
@@ -820,7 +825,7 @@ TODO: note that this is also derivable as $A + B \defeq \sum_{x:\mathbb 2}\ind_\
 However, $\mathbb 2$ can't be defined with $\W$-types without choice types.
 I'd rather use the theory to extend itself from within (\strong{internal definition}) rather than people adding rules from without (\strong{external definition}); ``Non-Wellfounded Trees in Homotopy Type Theory'' by Ahrens, Capriotti, and Spadotti have some discussion about these terms.
 
-\subsection{TODO: \Nary{} choice types}
+\subsection{TODO: \Nary/ choice types}
 
 \subsection{TODO: Void type}
 \label{subsec:void-type}
@@ -870,7 +875,7 @@ Values of W-type are introduced with a single constructor $\mathsf{sup}$, though
   The \strong{label} type $L$ combines the constructors and non-inductive arguments together; thus, we don't directly see the constructors.
   If we were thinking only in terms of ADTs, we might assume that $L$ is an $n$-ary sum of products (where each factor is a non-inductive argument) for $n$ constructors, but W-types are more general (we'll return to this later).
 
-  The \strong{arity} type represents the inductive argument, but it does not do so directly; instead, each non-inductive argument is ``named/indexed/pointed to'' by an element of $A$.
+  The \strong{arity} type represents the inductive arguments, but it does not do so directly; instead, each inductive argument is ``named/indexed/pointed to'' by an element of $A$.
   If I were being extraordinarily clear for readers coming from ML or Haskell, I might refer to the arity as the \strong{inductive arity}.
   (TODO: cite that nLab uses this terminology in its introduction on inductive types).
   The reason for this indirection is more clear when we consider the introduction form for W-types is $\wsup\;a\;f : \bigW_{x:L}A$, where $a : L$ is the label and $f : A\;a \to \bigW_{x:L}A$ is a function which, given a name of an inductive argument (which must be valid for the label) returns the sub-tree placed at that name.
@@ -898,7 +903,7 @@ Each node may also have a set of \strong{children}, each one accessible via a na
 The \strong{names} of the arcs are drawn from the arity type $A\;s$ associated with that node's shape (we use ``name'' rather than ``label'' so as not to confuse graph-theory and type-theory terms).
 The fact the arc names are determined by the shape gives another good reason to use ``shape'': it determines not just an \emph{internal} color, but also the \emph{external} interface which is just what sorts of child sets are allowed.
 The children themselves are accessible from $\wsup\;s\;c$ using $c$, which can be thought of as a \strong{child accessor} function.
-If $i$ is the name of an arc, then $c\;i$ is the target node of that arc, or in other words, the $i$\supth{} child of $\wsup\;s\;c$.
+If $i$ is the name of an arc, then $c\;i$ is the target node of that arc, or in other words, the $i$\supth/ child of $\wsup\;s\;c$.
 Since $A\;s$ is often a finite set, we can also use the word \strong{position} for the arc names, or even \strong{index} (thus the $i$ choice of metavar above) of the arc.
 Using ``index'' can lead to a false sense that the children form a simple list, whereas complex W-types might be better thought of as having more complex data structures for nodes' children.
 Finally, if we're coming from a set-theoretic perspective---thinking of W-type elements as well-founded sets---a child can also be called a \strong{predecessor}.
@@ -918,7 +923,7 @@ Formation at least is straightforward:
     \BinaryInfC{$\W{S}.\,A : \U$}
   \end{mathprooftree}
   \end{equation}
-And introduction is not bad if you read $s$ as the shape of the introduced node, and $c$ as the child-accessor function (so if $i : A\;s$, we can write $c\;i$ for the $i$\supth{} child).
+And introduction is not bad if you read $s$ as the shape of the introduced node, and $c$ as the child-accessor function (so if $i : A\;s$, we can write $c\;i$ for the $i$\supth/ child).
   \begin{equation}\tag{\textsf{W}\textsc{-intro}}\label{eqn:W-intro}
   \begin{mathprooftree}
     \AxiomC{$s : S$}
@@ -929,7 +934,7 @@ And introduction is not bad if you read $s$ as the shape of the introduced node,
   \end{equation}
 Elimination (the induction principle) is a mess, but it helps to first see the computation rule.
 The reduction passes the shape and child-accessor as if $\wsup$ were a mere tuple $\langle s,c \rangle$, but then it adds on a third argument $hyp$, which is an accessor function for the inductive hypotheses.
-The $i$\supth{} hypothesis $hyp\;i$ is computed as you would expect: perform the same induction on the $i$\supth{} child $c\;i$.
+The $i$\supth/ hypothesis $hyp\;i$ is computed as you would expect: perform the same induction on the $i$\supth/ child $c\;i$.
 (FIXME: where does the $A$ come from? Of course, it's not strictly necessary after type erasure. OTOH, I could use $\ind$ as a constant for all the induction principles, but have it accepts a type as its first argument as a sort of ad-hoc polymorphism: $\ind\;@(\W{S}.A)\;f\;(\wsup\;s\;c) \reduceto f\;s\;c\;(\fun{i^{A\;s}} \ind\;@(\W{S}.A)\;f\;(c\;i))$. There might even be some interaction with quantitative type theory)
   \begin{equation}\tag{\textsf{W}\textsc{-comp}}\label{eqn:w-comp}
     \ind_\W\;f\;(\wsup\;s\;c) \reduceto f\;s\;c\;hyp \where hyp\;i^{A\;s} = \ind_\W\;f\;(c\;i)
@@ -940,7 +945,7 @@ Let's start with the result type of $f$.
 We see that $\wsup\;s\;c$ is an arbitrary tree, and that $f$ must produce the desired property $\xi$ for that tree.
 The constraints on the first two arguments of $f$ (the dependent ones) are just the axioms of \ref{eqn:W-intro} so that $\wsup\;s\;c$ is well-formed.
 However, we also want to give $f$ access to the induction hypothesis for each child.
-This, we add a (dependent) hypothesis-accessor parameter of type $\deparr{i}{A\;s} \xi\;(c\;i)$, which takes a child index $i : A\;s$ to the induction hypothesis for that child (which has type $\xi\;(c\;i)$).
+Thus, we add a (dependent) hypothesis-accessor parameter of type $\deparr{i}{A\;s} \xi\;(c\;i)$, which takes a child index $i : A\;s$ to the induction hypothesis for that child (which has type $\xi\;(c\;i)$).
   \begin{equation}\tag{\textsf{W}\textsc{-elim}}
   \begin{mathprooftree}
     \AxiomC{$\xi : (\W{S}.\,A) \to \U$}
@@ -980,7 +985,7 @@ Obviously, it'd be easier to use $\all{a}\W_{a \times \mathbb N}.\,\pi_2$---whic
 \subsection{TODO: Mutually Inductive Types}
 
 If you, like me, are a programming language enthusiast, you might see a glaring gap in what is possible with inductive types so far: how does one define a type for the syntax of a programming language?
-For simple languages, like the untyped lambda calculus, we can use W-types, but once there are multiple non-terminals in the grammar, W-types offer no clear implementation path.
+For simple languages, like the untyped lambda calculus, we can use W-types, but once there are recursive non-terminals in the grammar, W-types offer no clear implementation path.
 It will turn out that W-types with identity types (\S\ref{sec:identity-types}) will be sufficient (though it does seem like there are some metatheoretic cobwebs that might not be suited to your philosophy).
 
 Nevertheless, it is still useful to describe \strong{indexed W-types}, which describe \strong{mutually inductive type families}, or \strong{mutually inductive types} for short.
@@ -1221,7 +1226,7 @@ Now that we have a handle on how to form, introduce, and visualize identity type
 The induction principle for identity types (called \strong{path induction} in the homotopy interpretation) allows us to take a property that holds for $\refl$ and turn it into a property that holds for all paths.
 In other words, to prove a fact about all paths, it is sufficient to prove it for the null path at some unknown point (i.e.\ for all null paths); induction then allows us to drag around one end of the null path (stretching the path behind it) while maintaining that property.
 Compare in \ref{eqn:equal-elim} the types for $f$ and $\ind_=\;f$, where we start with a function of a point that gives a property $\xi$ of the null path $\xi\;a\;a\;\refl$, and end up with a function of a general path (and its endpoints) that gives the correspondingly general result $\xi\;x\;y\;p$.
-More tersely, ``Thanks to path induction, that a property holds for $\refl$ is sufficient for it to also hold for all paths.''
+More tersely, ``Thanks to path induction, that a property holds for just $\refl$ is enough for it to hold for \emph{all} paths.''
 \begin{equation}\tag{\textsc{=-elim}}\label{eqn:equal-elim}
 \begin{mathprooftree}
 \AxiomC{$\displaystyle
@@ -1239,6 +1244,7 @@ $}
 $}
 \end{mathprooftree}
 \end{equation}
+FIXME: I should have $\xi$ an an argument, since without it, I think typechecking is undecidable in general.
 A more ergonomic presentation would make the endpoint parameters (first two arguments) implicit.
 Path induction would then look more like other induction principles, where the result family is indexed by an element of the type we say we are inducting over.
 I just think it's too early now to start hiding details if the student wants to be confident in eliding arguments later: I want to see just how boring it is to specify these arguments for a little while \emph{before} forgetting about them, and then it'll be easy to fill them in when I want to check my work later.
@@ -1255,7 +1261,7 @@ $}
 $}
 \LeftLabel{$\Gamma\vdash$}
 \BinaryInfC{$\displaystyle
-  (\ind_{\mathord=\{\tau\}}\;f)_{\{x,y\}} :
+  \ind_{\mathord=\{\tau\}}\;f :
     \Pitype{p}{x = y}\;
       \xi\;p
 $}
@@ -1267,6 +1273,172 @@ Once a type theory has identity types, we can now manipulate equality (specifica
 The intriguing thing about identity types is that, given only (propositional) reflexivity, we can derive all the basic facts of (propositional) equality like symmetry (ex.~\ref{ex:propeq-symmetry}) and transitivity (TODO: make a proof), as well as more advanced facts like function applicativity (TODO $(x = y) \to (f\;x = f\;y)$, \cite{hottbook}~lemma~2.2.1) as opposed to generative (i.e.\ type theory is functional, not imperative), or the indiscernibility of identicals (TODO \cite{hottbook}~lemma~2.3.1, which is the generalization for dependent functions).
 (TODO: I think these properties will be indispensible, but can I point at some examples?)
 
+TODO:
+Let's say we have a point $x : A$ and a function $f : A \to B$.
+If we now get another point $y : A$, and a proof that $x =_{\!A} y$, then it stands to reason that $f(x) = _B f(y)$.
+This is what \cite{hottbook} calls \strong{action on paths} (among other things), but which I like to think of as ``functions are pure''.
+We can prove this easily by path induction:
+  \[\begin{array}{rcl}
+    \mathrm{ap} &:& \displaystyle
+      \All_{\mathclap{A,B : \U}}\;\;
+      \deparr{f}{A \to B}
+      \Pitypes*{
+        \{x,y : A\} \\
+        p : x =_{\!A} y
+      }
+      f\;x =_B f\;y \\ \\[-0.5em]
+    \mathrm{ap}_{A,B}\;f &\defeq&
+      \begin{array}{l}
+        \letPart \xi : \all{x,y} (x =_{\!A} y) \to \U \\
+        \phantom{\letPart\mathstrut} \xi \defeq \square \\
+        \inPart \ind_{=,\xi}\;(\square : \all{a}\xi\;a\;a\;\refl_a)\;\\
+      \end{array} \\ \\[-0.5em]
+    &\defeq&
+      \begin{array}{l}
+        \letPart \xi : \all{x,y} (x =_{\!A} y) \to \U \\
+        \phantom{\letPart\mathstrut} \xi\;\mgray{x\;y\;\_} \defeq \mgray{f\;x =_B f\;y} \\
+        \inPart \ind_{=,\xi}\;(\square : \all{a}\xi\;a\;a\;\refl_a)\;\\
+      \end{array} \\ \\[-0.5em]
+    &\defeq&
+      \begin{array}{l}
+        \letPart \xi : \all{x,y} (x =_{\!A} y) \to \U \\
+        \phantom{\letPart\mathstrut} \xi\;x\;y\;\_ \defeq f\;x =_B f\;y \\
+        \inPart \ind_{=,\xi}\;(\mgray{\fun{a^A} \square : f\;a =_B f\;a})\;\\
+      \end{array} \\ \\[-0.5em]
+    &\defeq&
+      \begin{array}{l}
+        \letPart \xi : \all{x,y} (x =_{\!A} y) \to \U \\
+        \phantom{\letPart\mathstrut} \xi\;x\;y\;\_ \defeq f\;x =_B f\;y \\
+        \inPart \ind_{=,\xi}\;(\fun{a^A} \mgray{\refl_{f\,a}})\;\\
+      \end{array} \\
+  \end{array}\]
+Now presumably even if we use a dependent function $F : \vardeparr{x}{A} B\;x$, we should still have $F\;x = F\;y$ whenever $x =_{\!A} y$.
+However, what type $\tau$ should we infer for the equality $F\;x =_\tau F\;y$?
+Since $F\;x$ and $F\;y$ may be non-equal (when $x, y$ are non-equal, we can make no valid inference and our desired result $F\;x = F\;y$ is illegal stated in this way.
+To use this, we will need some scaffolding which HoTT calls \strong{path transport}, but which they also note is a restatement of Leibniz' \strong{Indiscernibility of Identicals}.
+Logically, if we know that $x = y$, and we know $F(x)$ holds for $x$, then it only makes sense that we should also know that $F(y)$ holds.
+In type theory, this intuition is a function $x = y \to F\;x \to F\;y$.
+\[\begin{array}{rcl}
+  \mathrm{xport} &:& \displaystyle
+    \All_{\substack{A,B : \U \\ x,y : A}}
+    \PitypeR{F}{\deparr{a}{A} B\;a}\;
+    (x =_{\!A} y) \to
+    F\;x \to F\;y \\ \\[-0.5em]
+  \mathrm{xport}_{A,B,x,y}\;F\;p^{x =_{\!A} y} &\defeq&
+      \begin{array}{l}
+        \letPart \xi : \all{a,a'} (a =_{\!A} a') \to \U \\
+        \phantom{\letPart\mathstrut} \xi \defeq \square \\
+        \phantom{\letPart\mathstrut} I : \Pitypes{\{x,y : A\} \\ p : x = y} \xi\;x\;y\;p \\
+        \phantom{\letPart\mathstrut} I \defeq \ind_{=,\xi}\;(\square : \all{a}\xi\;a\;a\;\refl_a) \\
+        \inPart I \;x\;y\;p\\
+      \end{array} \\ \\[-0.5em]
+  &\defeq&
+      \begin{array}{l}
+        \letPart \xi : \all{a,a'} (a =_{\!A} a') \to \U \\
+        \phantom{\letPart\mathstrut} \xi\;\mgray{a\;a'\;\_} \defeq \mgray{F\;a \to F\;a'} \\
+        \phantom{\letPart\mathstrut} I : \Pitypes{\{x,y : A\} \\ p : x = y} \xi\;x\;y\;p \\
+        \phantom{\letPart\mathstrut} I \defeq \ind_{=,\xi}\;(\square : \all{a}\xi\;a\;a\;\refl_a) \\
+        \inPart I \;x\;y\;p\\
+      \end{array} \\ \\[-0.5em]
+  &\defeq&
+      \begin{array}{l}
+        \letPart \xi : \all{a,a'} (a =_{\!A} a') \to \U \\
+        \phantom{\letPart\mathstrut} \xi\;a\;a'\;\_ \defeq F\;a \to F\;a' \\
+        \phantom{\letPart\mathstrut} I : \Pitypes{\{x,y : A\} \\ p : x = y} \mgray{F\;x \to F\;y} \\
+        \phantom{\letPart\mathstrut} I \defeq \ind_{=,\xi}\;(\mgray{\fun{a^A} \square : F\;a \to F\;a}) \\
+        \inPart I \;x\;y\;p\\
+      \end{array} \\ \\[-0.5em]
+  &\defeq&
+      \begin{array}{l}
+        \letPart \xi : \all{a,a'} (a =_{\!A} a') \to \U \\
+        \phantom{\letPart\mathstrut} \xi\;a\;a'\;\_ \defeq F\;a \to F\;a' \\
+        \phantom{\letPart\mathstrut} I : \Pitypes{\{x,y : A\} \\ p : x = y} F\;x \to F\;y \\
+        \phantom{\letPart\mathstrut} I \defeq \ind_{=,\xi}\;(\fun{a^A} \mgray{\mathrm{id}_{F\,a}}) \\
+        \inPart I \;x\;y\;p\\
+      \end{array} \\ \\[-0.5em]
+  &\defeq&
+      \begin{array}{l}
+        \letPart \xi : \all{a,a'} (a =_{\!A} a') \to \U \\
+        \phantom{\letPart\mathstrut} \xi\;a\;a'\;\_ \defeq F\;a \to F\;a' \\
+        \inPart \mgray{\ind_{=,\xi}\;(\fun{a^A} \mathrm{id}_{F\,a})}\;x\;y\;p \\
+      \end{array} \\
+\end{array}\]
+HoTT also defines $p_*$ for when $F$ can be inferred: $p_* \defeq \fun{\{F\}}\mathrm{xport}\;F\;p$.
+I believe (TODO) this is Indiscernibility of Identicals, but it does not yet state that dependent functions are pure.
+Here we can construct an arrow type, but what we want for dependent function purity is an equality type.
+We are now equipped to restate and prove the purity of dependent functions:
+  instead of trying to relate $F\;x = F\;y$ directly, we instead need to rewrite one of the $x$ or $y$ in $F\;x = F\;y$,
+  and to do this we will need to transport our given $x = y$ path.
+Where HoTT rewrote $x$, I will rewrite $y$ as an exercise.
+What we get is $\mathrm{apd}$ the dependent version of action on paths.
+\[\begin{array}{rcl}
+  \mathrm{apd} &:& \displaystyle
+      \All_{\substack{A :\U \\ F : A \to \U}}\;\;
+      \deparr{f}{\vardeparr{x}{A} F\;x}
+      \Pitypes*{
+        \{x,y : A\} \\
+        p : x =_{\!A} y
+      }
+      \left( f\;x =_{(F\;x)} p_*\;(f\;y) \right) \\ \\[-0.5em]
+  &:& \displaystyle
+      \All_{\substack{A :\U \\ F : A \to \U}}\;\;
+      \deparr{f}{\vardeparr{x}{A} F\;x}
+      \Pitypes*{
+        \{x,y : A\} \\
+        p : x =_{\!A} y
+      }
+      \left( f\;x =_{(F\;x)} \mathrm{xport}\;F\;p\;(f\;y) \right) \\ \\[-0.5em]
+  \mathrm{apd}_{A,F}\;f &\defeq&
+    \begin{array}{l}
+      \letPart \xi : \all{a,a'} (a =_{\!A} a') \to \U \\
+      \phantom{\letPart\mathstrut} \xi \defeq \square \\
+      \inPart \ind_{=,\xi}\;(\square : \all{a}\xi\;a\;a\;\refl_a) \\
+    \end{array} \\ \\[-0.5em]
+  &\defeq&
+    \begin{array}{l}
+      \letPart \xi : \all{a,a'} (a =_{\!A} a') \to \U \\
+      \phantom{\letPart\mathstrut} \xi\;\mgray{a\;a'\;p}\defeq \mgray{f\;a =_{F\,a} (\square : F\;a' \to F\;a)\;(f\;a')} \\
+      \inPart \ind_{=,\xi}\;(\square : \all{a}\xi\;a\;a\;\refl_a) \\
+    \end{array} \\ \\[-0.5em]
+  &\defeq&
+    \begin{array}{l}
+      \letPart \xi : \all{a,a'} (a =_{\!A} a') \to \U \\
+      \phantom{\letPart\mathstrut} \xi\;a\;a'\;p\defeq f\;a =_{F\,a} (\mgray{\mathrm{xport}\;F\;(\square : a' =_A a)})\;(f\;a') \\
+      \inPart \ind_{=,\xi}\;(\square : \all{a}\xi\;a\;a\;\refl_a) \\
+    \end{array} \\ \\[-0.5em]
+  &\defeq&
+    \begin{array}{l}
+      \letPart \xi : \all{a,a'} (a =_{\!A} a') \to \U \\
+      \phantom{\letPart\mathstrut} \xi\;a\;a'\;p\defeq f\;a =_{F\,a} (\mathrm{xport}\;F\;\mgray{p^{-1}})\;(f\;a') \\
+      \inPart \ind_{=,\xi}\;(\square : \all{a}\xi\;a\;a\;\refl_a) \\
+    \end{array} \\ \\[-0.5em]
+  &\defeq&
+    \begin{array}{l}
+      \letPart \xi : \all{a,a'} (a =_{\!A} a') \to \U \\
+      \phantom{\letPart\mathstrut} \xi\;a\;a'\;p\defeq f\;a =_{F\,a} \mgray{(p^{-1})_*}\;(f\;a') \\
+      \inPart \ind_{=,\xi}\;(\square : \all{a}\mgray{f\;a =_{F\,a} (\refl_a^{-1})_*\;(f\;a)}) \\
+    \end{array} \\ \\[-0.5em]
+  (\refl_a^{-1})_*\;(f\;a) &\defeq& (\ind_=(\fun{a^A}\mathrm{id}_{F\,a})\;\refl_a^{-1})\;(f\;a) \\
+    &\defeq& (\ind_=(\fun{a^A}\mathrm{id}_{F\,a})\;\refl_a)\;(f\;a) \\
+    &\defeq& \mathrm{id}_{F\,a}\;(f\;a) \\
+    &\defeq& f\;a \\
+  \mathrm{apd}_{A,F}\;f &\defeq&
+    \begin{array}{l}
+      \letPart \xi : \all{a,a'} (a =_{\!A} a') \to \U \\
+      \phantom{\letPart\mathstrut} \xi\;a\;a'\;p\defeq f\;a =_{F\,a} p^{-1}_*\;(f\;a') \\
+      \inPart \ind_{=,\xi}\;(\square : \all{a}f\;a =_{F\,a} \mgray{f\;a}) \\
+    \end{array} \\ \\[-0.5em]
+  &\defeq&
+    \begin{array}{l}
+      \letPart \xi : \all{a,a'} (a =_{\!A} a') \to \U \\
+      \phantom{\letPart\mathstrut} \xi\;a\;a'\;p\defeq f\;a =_{F\,a} p^{-1}_*\;(f\;a') \\
+      \inPart \ind_{=,\xi}\;(\mgray{\fun{a^A} \refl_{F\,a}}) \\
+    \end{array} \\ \\[-0.5em]
+\end{array}\]
+We can also see that $\mathsf{ap}$ is a special case of $\mathsf{apd}$:
+  $\mathsf{ap}_{A,B}\;f \defeq \mathsf{apd}_{A,\mathsf{const}\,B}\;f$
+  because we can compute $\mathsf{xport}\;(\mathsf{const}\;B) \defeq \mathsf{id}_{x=_{\!B}y}$.
+At least I think that reasoning is solid; HoTT throws a lot of symbols at it.
 % TODO: identity types allow us to substitute $x$ for $y$, as long as we have $x = y$ in our context.
 % The key feature they offer is the ability to perform substitution even when terms are not even syntactically congruent, just as long as we have an element of the identity type.
 % This allows us to express and manipulate notions such as a function being an inverse $f^{-1} \circ f =_{A \to A} id$, various axioms of abstract algebra $Semigroup \defeq \sum(M:\U, \_\cdot\_ : M \to M \to M).\,\all{a,b,c:M}(a \cdot b) \cdot c =_M a \cdot (b \cdot c)$, and so on, all directly in the type theory.
@@ -1303,6 +1475,58 @@ The Idris docs gave an example of where it is needed, but IIRC it's not needed i
 \subsection{TODO: Non-trivial Path Spaces}\label{subsec:fancy-path-spaces}
 
 TODO: Until I can find some use for, say, $\mathbb S_1$ in programming, I think the types of homotopy theory are outside the scope of this work.
+
+
+\section{TODO: Extensionality}
+
+This seems to be a philosophically-motivated feature, with correspondingly philosophical boundaries.
+The hope is that we can formulate mathematics in such a way so that ``it is not what we are, but what we do, that defines us [mathematical objects].'' (TODO: cite that audience member from one of the Altenkirch talks).
+As far as computer science is concerned, extensionality corresponds to our ability to hide the details of implementation (representation) behind an abstract interface.
+
+The thing that gets me I think is that even though HoTT introduces new ways to obtain equality proofs (univalence axiom prime among them), it nevertheless only requires the reflexivity case path induction.
+With that, what even is the computational meaning of path induction?
+
+what is the axiomatic difference between extensional and intentional type theory. what consequences does either choice have?
+
+\url{https://www.youtube.com/watch?v=bNG53SA4n48} puts more fuel on the fire of ``why are intensional/extensional used in so many different ways?''
+
+Extensional vs. Intentional has a few meanings: function extensionality vs. univalence vs. Axiom K/K-rule/uniquenes of identity proofs (UIP).
+I think function extensionality is just the $\eta$-conversion rule (and likewise $\eta$ for pairs would be pairing extensionality and so forth).
+The key feature of an intensional type theory is that judgmental equality only holds between terms that have syntactically identical normal forms.
+An extensional type theory includes a (bidirectional?) reflection rule such as $\Gamma\vdash\frac{x =_A y}{x \equiv y : A}$
+  so that any proof of equality can be replaced by reflexivity (thereby it cannot capture extentionality of types \url{https://www.youtube.com/watch?v=hD222LRaP8M}... \textbf{visible confusion}).
+The theory HoTT presents is (based on?) an \emph{intensional} one, which you can apparently see from the definition of its identity type; see the notes from \cite{hottbook} ch 2.
+The notes state the very terminological-confusion-revealing idea that univalence, which is an extensionality property only admissible in intentional type theories, is more extensional than adding extensionality to type theory!?
+
+Univalence is extensionality of the universe(s) similar to function extensionality.
+
+I tend to include $\eta$-conversion in my calculi; it just makes sense that deconstructing a constructor (eliminating an introduction) does nothing. Apparently though, extensionality makes type-checking undecidable somehow.
+
+Altenkirch in \url{https://www.youtube.com/watch?v=hD222LRaP8M} defines:
+\begin{definition}{The Principle of Extensionality}
+Given two objects $a, b : A$, we can either
+\begin{itemize}
+  \item prove them equal, or
+  \item find a property which distinguishes them
+        without using propositional equality.
+\end{itemize}
+One must be careful with this principle that the distinguishing should come before creating notions of propositional equality in any of its forms, including encodings.
+Okay, Altenkirch walks it back a bit and says it's an approximation only, since the attendees are poking so many holes in it.
+The point he's really trying to get as is that objects should be black boxes: you are not allowed in type theory to disassemble the code of a function.
+That is, two mathematical objects are the same when they have the same behavior, not only when they have the same description.
+\end{definition}
+Set theory is intensional because all you have to do is talk about the elements: given two encodings of naturals in ZF, one can distinguish them by asking $\varnothing \in 2$ for example.
+Intentionally-defined objects are those where their identity is consumed by their concrete description.
+Since infinite objects often have differing but equally-good descriptions, extensionality is particularly important there.
+Functions are one sort of infinite object and have received a lot of attention.
+In type theory, another kind of infinite object is types; extensionality for types is the univalence axiom: an answer to ``When are two types equal?''.
+
+\section{TODO: Logical Types}
+
+Although we can understand types as propositions, we have yet to show an exact correspondence with the way logic handles propositions.
+
+\subsection{TODO: Negation}
+\subsection{TODO: Propositional Truncation}
 
 \section{TODO: Constraint Types}
 
@@ -1441,6 +1665,9 @@ In \S3, Barendregt presents PTSs under the name \strong{generalized type systems
 Be wary of Barendregt replacing $s_3$ by $s_2$ in the typing inference for dependent function spaces when discussing the lambda cube; it's good enough for the lambda cube, but not PTSs in general.
 
 \section{TODO: Calculus of Inductive Constructions}
+
+TODO: why distinguish between propositions and sets? When coming from PTSs or Martin-L\"of tyep theory, it's totally out of left field. Is it an Automath thing? How does MLTT get away with just not making the distinction (or what does it lose)? The closest to answer I've read makes me think that quantitative type theory is sufficient, but who knows?
+
 \section{TODO: Martin-L\"of Type Theory}
 \section{TODO: Homotopy Type Theory}
 
@@ -1641,7 +1868,6 @@ Higher-order types: allows for the definition of (non-nullary) type operators a.
 Higher-kinded: type variables are allowed to range over type operators as well as simple types.
 Higher-rank: quantifiers are allowed to appear to the left of function arrows.
 
-I tend to include $\eta$-conversion in my calculi; it just makes sense that deconstructing a constructor (eliminating an introduction) does nothing. Apparently though, extensionality makes type-checking undecidable somehow.
 
 In axioms for typing judgments, threading the context around is often boring and obscures the substance.
 Instead, let's put the shared part on the right when possible:
@@ -1767,8 +1993,9 @@ where I would want the proof to always be erased before runtime.
 TODO:
 ``Type Theory base on Dependent Inductive and Coinductive Types'' by Basold and Geuvers claims to derive Martin-L\"of type theory with only the rules for W- and M-types.
 
-TODO: what is the axiomatic difference between extensional and intentional type theory. what consequences does either choice have?
-
+TODO:
+Speaking of normal forms, note that normal forms are not necessarily values (though closed normal forms are, I think).
+It reminds me of atoms used in A-normal-form, which can be values or single variables.
 
 TODO:
 Type theories have primitive types and type constructors.
@@ -1779,7 +2006,7 @@ The entropy of universes is interesting because their entropy depends on the ran
 $\Pi$-, $\Sigma$-, $+$-, $\W$-, $\mathsf M$-, and $=$-types are all constructors: they only move around existing information.
 
 TODO: there are some really subtle fundamental choices about type theories that significantly ipact its relations to category theory and computability and constructive mathematics.
-Predicativity has at least a couple different meanings. Extensional vs. Intentional also has some meanings: function extensionality vs. univalence vs. Axiom K/K-rule/uniquenes of identity proofs (UIP). Propositional equality vs. judgemental equality rules.
+Predicativity has at least a couple different meanings. Propositional equality vs. judgemental equality rules.
 These can impact decidability of type checking and the more subtle idea of determining a mathematical object uniquely.
 
 
@@ -1822,9 +2049,9 @@ Symmetry & Totality \\
 no & --- & $R$ \\
 yes & --- &  & & $\approx$ & $=$,$\equiv$,$\cong$,$\simeq$  \\
 \multirow{2}{*}{anti} & no & $\in$ & $\prec$,$\subset$ & & $\preceq$,$\subseteq$ \\
- & yes                    & & $<$ & & $\leq$ \\
+ & yes                    & & $<$ & & $\leq,\leqslant$ \\
 \multirow{2}{*}{anti$^\text{op}$} & no & $\ni$ & $\succ$,$\supset$ & & $\succeq$,$\supseteq$ \\
- & yes                    & & $>$ & & $\geq$ \\
+ & yes                    & & $>$ & & $\geq,\geqslant$ \\
 \end{tabular}
 \end{center}
 Other stuff: $\sqsubset$
@@ -1916,6 +2143,7 @@ Together, these two coherence properties are an adjunction in category theory.
 Just one gives a half-adjunction, but since the type theory operates in a sufficiently rich category, we can get one from the other.
 If you state both however, you need to add more, even higher-level coherence properties.
 Without coherence, you only have isomorphism of sets; for type isomorphism in general, you must include coherence because not all equality paths are identical.
+Apparently you need coherence exactly when you add univalence $A = B \defeq A \simeq B$, and I think the point is to rule out isomorphisms like flipping booleans?
 
 
 Cubical Type Theory is the ``proper'' implementation of HoTT: it gives a computational character to the univalence axiom (we don't like axioms b/c they do not have reduction behavior), and Cubical Agda is what Altenkirch likes as a real-world implementation.
@@ -1926,8 +2154,6 @@ TODO:
 I want to prove that $(f \circ g = id) \iff (\all{x} (f \circ g)(x) = x)$.
 The forward direction is simple, but I wonder about the backward direction.
 
-TODO:
-\url{https://www.youtube.com/watch?v=bNG53SA4n48} puts more fuel on the fire of ``why are intensional/extensional used in so many different ways?''
 
 TODO:
 \begin{align*}
@@ -1939,7 +2165,58 @@ TODO:
 \fun{A^\U}\fun{p^{(A + (A \to \mathbb 0)) \to \mathbb 0}} ???
   &: \all{A^\U} ((A + (A \to \mathbb 0)) \to \mathbb 0) \to \mathbb 0 \\
 \end{align*}
+Okay, it's obvious that I need to take some notes on working with negations.
+We let $\lnot A \defeq A \to \mathbb 0$.
 
+First, I'd like to define double negation introduction:
+\[\begin{array}{rcl}
+  \mathrm{dblneg} & : & \all{A^\U} A \to \lnot A \to \mathbb 0 \\
+                  & : & \all{A^\U} A \to \lnot\lnot A \\
+  \mathrm{dblneg}_{A}(a) & \defeq & \fun{n^{\lnot A}} n\;a \\
+\end{array}\]
+You might notice that this is just a specialized flipped apply.
+Then we can even prove $\lnot A \Leftrightarrow \lnot\lnot\lnot A$.
+The forward direction with $\fun{A^\U} \mathrm{dblneg}_{\lnot A}$.
+The backward direction requires a bit more creative use of double negation intro:
+\[\begin{array}{rcl}
+  \fun{A,x^{\lnot\lnot\lnot A}} (\square : \lnot A) & : & \all{A^\U} \lnot\lnot\lnot A \to \lnot A \\
+  \fun{A,x^{\lnot\lnot\lnot A}} \fun{a^A} (\square : \mathbb 0) & : & \all{A^\U} \lnot\lnot\lnot A \to (A \to \mathbb 0) \\
+  \fun{A,x^{\lnot\lnot\lnot A}} \fun{a^A} x\;(\square : \lnot\lnot A) & : \\
+  \fun{A,x^{\lnot\lnot\lnot A}} \fun{a^A} x\;(\mathrm{dblneg}\;a) & : & \all{A^\U} \lnot\lnot\lnot A \to \lnot A \\
+\\[-1em] & \mathclap{\text{At this point we're done, but there is a ``simplification'' we can perform}} \\[-1em]\\
+  \fun{A,x^{\lnot\lnot\lnot A}} \fun{a^A} x\;(\mathrm{dblneg}\;a)
+    & \equiv & \fun{A,x^{\lnot\lnot\lnot A}} \fun{a^A} (x \circ \mathrm{dblneg})\;a \\
+    & \equiv & \fun{A,x^{\lnot\lnot\lnot A}} x \circ \mathrm{dblneg}
+\end{array}\]
+Next, let's get one of DeMorgan's laws:
+\[\begin{array}{rcl}
+  \mathrm{DM.distribNotOr} & : & \all{A^\U,B^\U}\lnot(A + B) \to \lnot A \times \lnot B \\
+  \mathrm{DM.distribNotOr}_{A,B} & \defeq & \fun{x^{\lnot(A+B)}} (\square : \lnot A \times \lnot B) \\
+    & \defeq & \fun{x^{\lnot(A+B)}} \langle\fun{a^A} (\square : \mathbb 0), \fun{b^B} (\square : \mathbb 0)\rangle \\
+    & \defeq & \fun{x^{\lnot(A+B)}} \langle\fun{a^A} x\;(\mathrm{L}\;a), \fun{b^B} x\;(\mathrm{R}\;b)\rangle \\
+\end{array}\]
+Now I have the tools to do what I was challenged by that Altenkirch talk to do:
+\[\begin{array}{rcl}
+  \fun{A} \square & : & \all{A^\U}\lnot\lnot(A + \lnot A) \\
+  \fun{A}\fun{x^{\lnot(A + \lnot A)}} (\square : \mathbb 0) & : & \all{A^\U}\lnot(A + \lnot A) \to \mathbb 0 \\
+  \fun{A}\fun{x^{\lnot(A + \lnot A)}}
+    \begin{array}{l}
+      \caseof{\mathrm{DM.distribNotOr}\;x} \\
+      \quad \{\langle a^{\lnot A}, n^{\lnot\lnot A}\rangle \To (\square : \mathbb 0)\}
+    \end{array} & : & \\
+  \fun{A}\fun{x^{\lnot(A + \lnot A)}}
+    \begin{array}{l}
+      \caseof{\mathrm{DM.distribNotOr}\;x} \\
+      \quad \{\langle a^{\lnot A}, n^{\lnot\lnot A}\rangle \To n\;a\}
+    \end{array} & : &  \\
+\end{array}\]
+Alternately, I could have (ab)used dblneg and uncurry to write
+  $$\fun{A}\fun{x^{\lnot(A + \lnot A)}} (\mathrm{uncurry}\; \mathrm{dblneg})\;(\mathrm{DM.distribNotOr}\;x)$$
+  $$\fun{A}(\mathrm{uncurry}\; \mathrm{dblneg}) \circ \mathrm{DM.distribNotOr}$$
+I want to come back to HoTT Thm 3.2.2 and make the argument more formal.
+To start, I think what it is saying is $\lnot\all{A^\U}\lnot\lnot A \to A$, and it does that by proving that
+   $\rec_\mathbb 2\;1_\mathbb2\;0_\mathbb2$ is a type isomorphism (easy), and then it uses some homotopy fanciness to show that it also isn't an isomorphism,
+   and from the two together we can derive $\mathbb0$.
 
 TODO:
 I am most interested in the computation aspects.
@@ -1947,7 +2224,17 @@ For example, it is important that that typechecking be deterministic, because th
 Principle types matters because then there is no ambiguity in memory layout.
 Confluence matters because then the order of optimization steps does not change the answer.
 Eta-conversion matters because it eliminates a nilpotent stack frame.
-So, what computational thing does Univalence get me\qcomma or higher inductive(-inductive) types\qcomma extensionality?
+So, what computational thing does Univalence get me\qcomma/ or higher inductive(-inductive) types\qcomma/ extensionality?
+
+TODO:
+In set theory, we work with two kinds of mathematical objects: sets and propositions.
+Types are a generalization of both sets and propositions; therefore, there is only one kind if mathematical object involved unless and until we restrict ourselves to special cases of types.
+In set theory, elements exist ``prior'' to sets, and sets simply collect those elements.
+In type theory, the elements and types are generated together, and an element of one type cannot be an element of another (though by abuse of notation it may appear so; e.g.\ $a : A$ and $a : \{x : A \mid P(x)\}$ for some mere proposition $P$0.
+
+TODO: When HoTT mentions ``it is sufficient to assume \guillemotleft inputs\guillemotright are \guillemotleft thing\guillemotright'', they mean that the things are complete patterns matching the inputs.
+
+TODO: \url{https://github.com/uwu-tech/Kind/blob/master/blog/1-beyond-inductive-datatypes.md} has some interesting stuff about the representation of datatypes (i.e. their induction principle), but I'd first have to decode the new lang syntax back into type theory.
 
 \printbibliography
 
